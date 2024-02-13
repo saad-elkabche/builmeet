@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "873706972428",
+    "project_id": "builmeet",
+    "storage_bucket": "builmeet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873706972428:android:9330eec8e443c5d832d529",
+        "android_client_info": {
+          "package_name": "com.builmeet.builmeet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPFXIHAB-X-OIe0Heu5GR7gN38rBcM-m8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
