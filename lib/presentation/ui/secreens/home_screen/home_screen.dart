@@ -1,5 +1,6 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart';
 import 'package:builmeet/presentation/ui/secreens/home_screen/components/floating_action_location.dart';
 import 'package:builmeet/routes.dart';
@@ -50,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _addOffer() {
-    GoRouter.of(context).push(Routes.addOffer);
+    UserEntity me=BlocProvider.of<MainScreenBloc>(context).state.me!;
+    GoRouter.of(context).push(Routes.addOffer,extra: me);
   }
 }
 

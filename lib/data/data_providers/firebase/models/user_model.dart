@@ -119,6 +119,7 @@ class UserModel{
 
   UserEntity toUserEntity(){
     return UserEntity(
+      id: uid,
       nomComplet: nomComplet,
       adressEmail: adressEmail,
       dateNaissance: dateNaissance,

@@ -13,4 +13,21 @@ enum UserTypes{
   employee
 }
 
+enum OrderStatus{
+  active,
+  finished,
+  pending
+}
+
+enum InterestsStatus{
+  accepted,
+  refused,
+  pending
+}
+
+enum PricingTypes{
+  hourly,
+  total
+}
+
 

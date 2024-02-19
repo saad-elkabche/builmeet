@@ -1,6 +1,7 @@
 
 
 
+import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/presentation/ui/secreens/secreens.dart';
 import 'package:builmeet/test_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,9 +91,15 @@ class Routes{
         ),
         GoRoute(
             path: addOffer,
-            pageBuilder: (state,context){
+            redirect: (context,state){
+              if(state.extra==null || state.extra is! UserEntity){
+                return '/';
+              }
+            },
+            pageBuilder: (context,state){
+              UserEntity me=state.extra as UserEntity;
               return NoTransitionPage(
-                  child: AddOfferScreen.page()
+                  child: AddOfferScreen.page(me)
               );
             }
         )

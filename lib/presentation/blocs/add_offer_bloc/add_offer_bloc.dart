@@ -2,13 +2,22 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/domain/entities/offer_entity.dart';
+import 'package:builmeet/domain/entities/user_entity.dart';
+import 'package:builmeet/domain/repository/repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 part 'add_offer_event.dart';
 part 'add_offer_state.dart';
 
 class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
-  AddOfferBloc() : super(AddOfferState.empty()) {
+
+  Repository repository;
+  UserEntity me;
+
+
+  AddOfferBloc({required this.repository,required this.me}) : super(AddOfferState.empty()) {
     on<CalculeFees>(_calculateFees);
     on<CreateOffer>(_createOffer);
   }
@@ -60,7 +69,7 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
     }
   }
 
-  FutureOr<void> _createOffer(CreateOffer event, Emitter<AddOfferState> emit) {
+  FutureOr<void> _createOffer(CreateOffer event, Emitter<AddOfferState> emit) async{
     try{
       emit(state.copyWith(addOfferStatus: AppStatus.loading));
       add(CalculeFees(nbHour: event.nbHour,
@@ -70,9 +79,25 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
           dateEnd: event.dateEnd
         )
       );
+      OfferEntity offerEntity=OfferEntity(
+        pricingType: event.isByHour?PricingTypes.hourly:PricingTypes.total,
+        orderStatus: OrderStatus.pending,
+        creator: me,
+        dateDebut: event.dateBegin,
+        dateFin: event.dateEnd,
+        nbHourPerDay: int.parse(event.nbHour),
+        price: double.parse(event.price),
+        metier: event.metier,
+        address: event.address,
+        description: event.description
+      );
+
+      await repository.createOffer(offerEntity);
+      emit(state.copyWith(addOfferStatus: AppStatus.success));
 
     }catch(ex){
-
+      emit(state.copyWith(addOfferStatus: AppStatus.error));
+      rethrow;
     }
   }
 }

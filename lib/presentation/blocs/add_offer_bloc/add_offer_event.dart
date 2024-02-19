@@ -27,11 +27,19 @@ class CreateOffer extends AddOfferEvent{
   String price;
   bool isByHour;
 
+  String metier;
+  String description;
+  String address;
+
   CreateOffer({
     required this.nbHour,
     required this.dateBegin,
     required this.dateEnd,
     required this.price,
+
+    required this.address,
+    required this.description,
+    required this.metier,
     required this.isByHour});
 }
 

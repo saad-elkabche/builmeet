@@ -3,6 +3,7 @@ import 'package:builmeet/core/dependencies/dependencies.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/thems/light/light_theme.dart';
 import 'package:builmeet/data/data_providers/firebase/auth_service/auth_service.dart';
+import 'package:builmeet/data/data_providers/firebase/db_service/db_service.dart';
 import 'package:builmeet/data/data_providers/firebase/firebase_data.dart';
 import 'package:builmeet/data/repository.dart';
 import 'package:builmeet/domain/repository/repository.dart';
@@ -45,7 +46,12 @@ Future<void> prepareDependencies() async{
   FirebaseData firebaseData=FirebaseDataIml(
       AuthService(firebaseAuth:firebaseAuth,
           firebaseFirestore: firebaseFirestore,
-          firebaseStorage: firebaseStorage )
+          firebaseStorage: firebaseStorage ),
+      DBService(
+        firebaseAuth: firebaseAuth,
+        firebaseStorage: firebaseStorage,
+        firebaseFirestore: firebaseFirestore
+      )
   );
 
   Repository repository=RepositoryIml(firebaseData: firebaseData);

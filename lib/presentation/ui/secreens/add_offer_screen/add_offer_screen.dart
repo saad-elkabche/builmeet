@@ -1,14 +1,20 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/dependencies/dependencies.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
+import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/core/validator/validator.dart';
+import 'package:builmeet/domain/entities/user_entity.dart';
+import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/blocs/add_offer_bloc/add_offer_bloc.dart';
+import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
 import 'package:builmeet/presentation/ui/components/form_field.dart';
 import 'package:builmeet/presentation/ui/secreens/add_offer_screen/components/header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,11 +25,15 @@ import 'package:intl/intl.dart';
 
 
 class AddOfferScreen extends StatefulWidget {
-  const AddOfferScreen({Key? key}) : super(key: key);
 
-  static Widget page(){
+
+
+  AddOfferScreen({Key? key}) : super(key: key);
+
+  static Widget page(UserEntity me){
+    Repository repository=Dependencies.get<Repository>();
     return BlocProvider<AddOfferBloc>(
-        create: (context)=>AddOfferBloc(),
+        create: (context)=>AddOfferBloc(repository: repository,me: me),
       child: AddOfferScreen(),
     );
   }
@@ -282,8 +292,10 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 MyCustomButton(name: 'Envoyer',textColor: Colors.white,borderRadius: 25,height: 50,onClick: _createOffer,),
                 const SizedBox(height: 25,),
 
-
-
+                BlocListener<AddOfferBloc,AddOfferState>(
+                  listener: _AddOfferListener,
+                  child: SizedBox(),
+                )
               ],
             ),
           ),
@@ -425,14 +437,28 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
 
   void _createOffer() {
-    if(formState.currentState!.validate()){
-      if(dateFin!.isAfter(dateDebut!)){
-
-      }else{
-        showDateWarning();
-      }
+    if(!formState.currentState!.validate()) {
+      return;
     }
+    if(!dateFin!.isAfter(dateDebut!)){
+      showDateWarning();
+      return;
+    }
+
+    BlocProvider.of<AddOfferBloc>(context).add(CreateOffer(
+
+        address: addressController.text,
+        description: descriptionController.text,
+        metier: metierController.text,
+        nbHour: nbHourControler.text,
+        dateBegin: dateDebut!,
+        dateEnd: dateFin!,
+        price: priceController.text,
+        isByHour: isByHour
+      )
+    );
   }
+
 
   void showDateWarning() {
     showInfoDialogue(
@@ -441,4 +467,20 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
             () {hideDialogue(context); });
   }
 
+
+
+  void _AddOfferListener(BuildContext context, AddOfferState state) {
+    if(state.addOfferStatus==AppStatus.loading){
+      showProgressBar(context);
+    }else if(state.addOfferStatus==AppStatus.error){
+      hideDialogue(context);
+      showInfoDialogue(MessageUi(state.error??'error', AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
+    }else if(state.addOfferStatus==AppStatus.success){
+      hideDialogue(context);
+      showInfoDialogue(MessageUi('Offer is Created', AppStatus.success, 'Okay'), context, () {
+        hideDialogue(context);
+        GoRouter.of(context).pop();
+      });
+    }
+  }
 }
