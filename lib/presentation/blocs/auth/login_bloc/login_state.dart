@@ -1,6 +1,24 @@
 part of 'login_bloc.dart';
 
-@immutable
-abstract class LoginState {}
+ class LoginState {
 
-class LoginInitial extends LoginState {}
+   AppStatus? loginStatus;
+   String? error;
+   UserEntity? userEntity;
+
+
+   LoginState.empty();
+   LoginState({this.loginStatus, this.error, this.userEntity});
+
+
+   LoginState copyWith({AppStatus? loginStatus,String? error,UserEntity? userEntity}){
+     return LoginState(
+       error: error ,
+       userEntity: userEntity ?? this.userEntity,
+       loginStatus: loginStatus ?? this.loginStatus
+     );
+   }
+
+}
+
+

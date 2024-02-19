@@ -40,6 +40,18 @@ dependencies:
   dio: ^5.4.0
   google_fonts: ^6.1.0
   flutter_bloc: ^8.1.4
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  loading_animation_widget: ^1.2.0+4
+  shared_preferences: ^2.2.2
+  date_field: ^4.0.1
+  intl: ^0.18.1
+  font_awesome_flutter: ^10.7.0
+  image_picker: ^1.0.7
+  firebase_auth: ^4.17.4
+  cloud_firestore: ^4.15.4
+  firebase_storage: ^11.6.5
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:
