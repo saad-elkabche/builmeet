@@ -88,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
 
     widget.child.goBranch(
         index,
-      initialLocation: index==widget.child.currentIndex
+      initialLocation: index==widget.child.currentIndex,
     );
   }
 

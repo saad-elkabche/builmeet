@@ -4,6 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 ThemeData lightTheme=ThemeData(
   scaffoldBackgroundColor: AppColors.scaffoldColor,
+  textSelectionTheme: const TextSelectionThemeData(
+    selectionColor: AppColors.primaryColor,
+    selectionHandleColor: AppColors.primaryColor,
+    cursorColor: AppColors.primaryColor
+  ),
   datePickerTheme: DatePickerThemeData(
     backgroundColor: Colors.white,
     dayBackgroundColor:MaterialStateProperty.resolveWith((states){

@@ -61,7 +61,7 @@ class UserModel{
       description: json['description'],
       documentUrl: json['documentUrl'],
       profilePicUrl: json['profilePicUrl'],
-      metiers: json['metiers'],
+      metiers: json['metiers']!=null?List.from((json['metiers'] as List).map((e) => e.toString())):json['metiers'],
       nbRates: json['nbRates'],
       nomComplet: json['fullName'],
 
@@ -92,7 +92,7 @@ class UserModel{
   UserModel copyWith({
     String? profilePicUrl,
     String? documentUrl,
-
+    String? uid
   }){
     return UserModel(
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
@@ -109,7 +109,7 @@ class UserModel{
       type: type,
       rate: rate,
       password: password,
-      uid: uid,
+      uid: uid ?? this.uid,
     );
   }
 
@@ -153,5 +153,32 @@ class UserModel{
       profilePicUrl: userEntity.profilePicUrl
     );
   }
+
+  Map<String,dynamic> jsonForUpdatingEmail(){
+    return {
+      'email':adressEmail,
+    };
+  }
+  Map<String,dynamic> jsonForUpdatingName(){
+    return {
+      'fullName':nomComplet,
+    };
+  }
+  Map<String,dynamic> jsonForUpdatingprofileUrl(){
+    return {
+      'profilePicUrl':profilePicUrl,
+    };
+  }
+  Map<String,dynamic> jsonForBecomeEmployee(){
+    return {
+      'documentUrl':documentUrl,
+      'address':address,
+      'description':description,
+      'type':type,
+      'metiers':metiers,
+    };
+  }
+
+
 
 }

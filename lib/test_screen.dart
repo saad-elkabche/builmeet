@@ -1,3 +1,6 @@
+import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/domain/entities/user_entity.dart';
+import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/ui/secreens/main_screen/main_screen.dart';
 import 'package:builmeet/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,7 +24,7 @@ class _TestScreenState extends State<TestScreen> {
       body: Center(
         child: ElevatedButton(
           child: Text('create account'),
-          onPressed: _createAcount,
+          onPressed: updateEmail,
         ),
       ),
     );
@@ -59,5 +62,13 @@ class _TestScreenState extends State<TestScreen> {
         print('email in use');
       }
     }
+  }
+
+  void updateEmail() async{
+    Repository repository=Dependencies.get<Repository>();
+    UserEntity userEntity=await repository.getCurrentUser();
+    userEntity=userEntity.copyWith(email: 'saadelkabche56@gmail.com');
+    await repository.updateEmail(userEntity);
+    print("===========================finish");
   }
 }

@@ -3,7 +3,6 @@
 
 
 import 'package:builmeet/core/constants/enums.dart';
-import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 
 class OfferEntity {
@@ -20,7 +19,7 @@ class OfferEntity {
   OrderStatus? orderStatus;
   UserEntity? creator;
   UserEntity? employee;
-  List<InterestEntity>? interests;
+  int? countInterests;
 
   OfferEntity({
     this.offerId,
@@ -36,5 +35,10 @@ class OfferEntity {
     this.orderStatus,
     this.creator,
     this.employee,
-    this.interests});
+    this.countInterests});
+
+  @override
+  String toString() {
+    return "id:$offerId metier: $metier addrss: $address description $description price $price nbHour $nbHourPerDay orderStatus $orderStatus";
+  }
 }

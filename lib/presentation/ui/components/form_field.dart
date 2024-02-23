@@ -127,6 +127,7 @@ class _MyFormFieldState extends State<MyFormField> {
         :field();
   }
   Widget field()=>TextFormField(
+
     inputFormatters:widget.formatters ,
     keyboardType: widget.inputType,
     readOnly: widget.readOnly,
@@ -168,6 +169,7 @@ class _MyFormFieldState extends State<MyFormField> {
       borderRadius: BorderRadius.circular(widget.borderRadius),
       borderSide: BorderSide(color: widget.activeBorderColor,width: widget.borderWidth)
   ),
+
 
     ),
   );

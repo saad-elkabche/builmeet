@@ -2,6 +2,8 @@
 
 
 
+
+
 import 'package:builmeet/core/extenssions/order_status_extension.dart';
 import 'package:builmeet/core/extenssions/pricing_types_extension.dart';
 import 'package:builmeet/data/data_providers/firebase/models/interest_model.dart';
@@ -23,7 +25,8 @@ class OfferModel{
   String? orderStatus;
   UserModel? creator;
   UserModel? employee;
-  List<InterestModel>? interests;
+  int? interestsCount;
+
 
   OfferModel({
       this.offerId,
@@ -39,7 +42,8 @@ class OfferModel{
       this.orderStatus,
       this.creator,
       this.employee,
-      this.interests});
+      this.interestsCount
+      });
 
 
   factory OfferModel.fromJson(Map<String,dynamic> json,String id){
@@ -94,5 +98,42 @@ class OfferModel{
 
   }
 
+  OfferEntity toOfferEntity(){
+    return OfferEntity(
+      employee: employee?.toUserEntity(),
+      creator: creator?.toUserEntity(),
+      offerId: offerId,
+      dateCreation: dateCreation,
+      dateDebut: dateDebut,
+      dateFin: dateFin,
+      pricingType: pricingType?.pricingType,
+      orderStatus: orderStatus?.orderStatus,
+      nbHourPerDay: nbHourPerDay,
+      price: price,
+      metier: metier,
+      address: address,
+      description: description,
+      countInterests: interestsCount,
+    );
+  }
+
+  OfferModel copyWith({int? interestCount,UserModel? employee,UserModel? creator}){
+    return OfferModel(
+      employee: employee ?? this.employee,
+      interestsCount: interestsCount ?? this.interestsCount,
+      description: description,
+      address: address,
+      metier: metier,
+      price: price,
+      nbHourPerDay: nbHourPerDay,
+      dateFin: dateFin,
+      dateDebut: dateDebut,
+      creator: creator ?? this.creator,
+      orderStatus: orderStatus,
+      pricingType: pricingType,
+      dateCreation: dateCreation,
+      offerId: offerId
+    );
+  }
 
 }

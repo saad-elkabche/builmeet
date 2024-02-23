@@ -15,5 +15,14 @@ abstract class Repository{
   Future<void> signOut();
   Future<void> createOffer(OfferEntity offerEntity);
 
+  Future<List<OfferEntity>> getOfferForClient();
+  Future<List<OfferEntity>> getOffersForEmployee();
+
+  Future<UserEntity> updateName(UserEntity userEntity);
+  Future<UserEntity> updateEmail(UserEntity userEntity);
+  Future<UserEntity> updatePassword(UserEntity userEntity);
+  Future<UserEntity> updateProfileImg(UserEntity userEntity);
+  Future<UserEntity> bacomeEmployee(UserEntity userEntity);
+
 
 }

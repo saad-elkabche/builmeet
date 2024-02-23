@@ -5,6 +5,7 @@ import 'package:builmeet/core/thems/light/light_theme.dart';
 import 'package:builmeet/data/data_providers/firebase/auth_service/auth_service.dart';
 import 'package:builmeet/data/data_providers/firebase/db_service/db_service.dart';
 import 'package:builmeet/data/data_providers/firebase/firebase_data.dart';
+import 'package:builmeet/data/data_providers/firebase/storage_service/storage_service.dart';
 import 'package:builmeet/data/repository.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/firebase_options.dart';
@@ -28,7 +29,7 @@ void main() async{
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.dark,
         statusBarColor: AppColors.scaffoldColor,
-        systemNavigationBarColor: AppColors.scaffoldColor,
+        systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark
     )
   );
@@ -44,14 +45,9 @@ Future<void> prepareDependencies() async{
   FirebaseStorage firebaseStorage=FirebaseStorage.instance;
 
   FirebaseData firebaseData=FirebaseDataIml(
-      AuthService(firebaseAuth:firebaseAuth,
-          firebaseFirestore: firebaseFirestore,
-          firebaseStorage: firebaseStorage ),
-      DBService(
-        firebaseAuth: firebaseAuth,
-        firebaseStorage: firebaseStorage,
-        firebaseFirestore: firebaseFirestore
-      )
+      AuthService(firebaseAuth:firebaseAuth,),
+      DBService(firebaseFirestore: firebaseFirestore),
+      StorageService(firebaseStorage: firebaseStorage)
   );
 
   Repository repository=RepositoryIml(firebaseData: firebaseData);

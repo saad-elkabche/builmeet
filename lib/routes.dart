@@ -19,12 +19,13 @@ class Routes{
   static const String journal='/journal';
   static const String profile='/profile';
   static const String addOffer='/addOffer';
+  static const String becomeEmployee='/employee';
 
   GlobalKey<NavigatorState> parentKey=GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> childKey=GlobalKey<NavigatorState>();
 
   static GoRouter router=GoRouter(
-    initialLocation: '/login',
+    initialLocation:onboarding,
 
       routes: [
         GoRoute(
@@ -70,7 +71,7 @@ class Routes{
                 routes: [
                   GoRoute(
                       path: home,
-                      pageBuilder:(context,state)=> NoTransitionPage(child: HomeScreen())
+                      pageBuilder:(context,state)=> NoTransitionPage(child: HomeScreen.page())
                   )
                 ]
             ),
@@ -82,7 +83,7 @@ class Routes{
                 routes: [
                   GoRoute(
                       path: profile,
-                      pageBuilder:(context,state)=> NoTransitionPage(child: ProfileScreen())
+                      pageBuilder:(context,state)=> NoTransitionPage(child: ProfileScreen.page())
                   )
                 ]
             )
@@ -102,6 +103,11 @@ class Routes{
                   child: AddOfferScreen.page(me)
               );
             }
+        ),
+
+        GoRoute(
+            path: becomeEmployee,
+          pageBuilder: (context,state)=>NoTransitionPage(child: BecomeEmployeeSecreen.page())
         )
 
 

@@ -30,7 +30,7 @@ class DialogueInfos extends StatelessWidget {
       content: Text(message.msg,style: GoogleFonts.aBeeZee(fontSize: 18,),textAlign: TextAlign.center,),
       backgroundColor: Colors.white,
       actions: [
-        MyCustomButton(name: message.Action,width: 100,color:buttonColor,onClick: onclickAction,)
+        MyCustomButton(name: message.Action,width: 140,color:buttonColor,onClick: onclickAction,)
       ],
     );
   }

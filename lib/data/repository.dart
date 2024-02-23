@@ -49,5 +49,56 @@ class RepositoryIml extends Repository{
     await firebaseData.createOffer(offerModel);
   }
 
+  @override
+  Future<List<OfferEntity>> getOfferForClient()async {
+    List<OfferModel> offersModel=await firebaseData.getOfferForClient();
+    List<OfferEntity> offersEntity=List.from(offersModel.map((offer) =>offer.toOfferEntity() ));
+    return offersEntity;
+  }
+
+  @override
+  Future<List<OfferEntity>> getOffersForEmployee() async{
+    List<OfferModel> offersModel=await firebaseData.getOfferForEmployee();
+    List<OfferEntity> offersEntity=List.from(offersModel.map((offer) =>offer.toOfferEntity() ));
+    return offersEntity;
+  }
+
+  @override
+  Future<UserEntity> updateEmail(UserEntity userEntity) async{
+    UserModel userModel=UserModel.toUserModel(userEntity);
+    UserModel userModelResp=await firebaseData.updateEmail(userModel);
+    return userModelResp.toUserEntity();
+  }
+
+  @override
+  Future<UserEntity> updateName(UserEntity userEntity) async{
+    UserModel userModel=UserModel.toUserModel(userEntity);
+    UserModel userModelRes=await firebaseData.updateName(userModel);
+    return userModelRes.toUserEntity();
+  }
+
+  @override
+  Future<UserEntity> updatePassword(UserEntity userEntity)async {
+    UserModel userModel=UserModel.toUserModel(userEntity);
+    UserModel userModelResponse = await firebaseData.updatePassword(userModel);
+    return userModelResponse.toUserEntity();
+  }
+
+  @override
+  Future<UserEntity> updateProfileImg(UserEntity userEntity)async {
+    UserModel userModel=UserModel.toUserModel(userEntity);
+    UserModel userModelRes=await firebaseData.updateProfilImg(userModel);
+    return userModelRes.toUserEntity();
+  }
+
+  @override
+  Future<UserEntity> bacomeEmployee(UserEntity userEntity) async{
+    UserModel userModel=UserModel.toUserModel(userEntity);
+    UserModel userModelRes=await firebaseData.becomeAEmployee(userModel);
+    return userModelRes.toUserEntity();
+  }
+
+
+
 
 }

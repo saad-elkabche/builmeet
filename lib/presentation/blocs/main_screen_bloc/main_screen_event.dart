@@ -7,3 +7,8 @@ abstract class MainScreenEvent {}
 class FetchData extends MainScreenEvent{
 
 }
+
+
+class UpdateAppMode extends MainScreenEvent{
+
+}

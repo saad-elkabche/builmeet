@@ -478,8 +478,10 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
     }else if(state.addOfferStatus==AppStatus.success){
       hideDialogue(context);
       showInfoDialogue(MessageUi('Offer is Created', AppStatus.success, 'Okay'), context, () {
-        hideDialogue(context);
-        GoRouter.of(context).pop();
+        GoRouter goRouter=GoRouter.of(context);
+        while(goRouter.canPop()){
+          goRouter.pop();
+        }
       });
     }
   }

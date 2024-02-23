@@ -17,11 +17,13 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   Repository repository;
   SharedPrefService sharedPrefService;
   late StreamSubscription<User?> streamAuthSubscription;
+  late StreamSubscription<User?> streamAuthSubscription1;
 
 
   MainScreenBloc({required this.sharedPrefService,required FirebaseAuth firebaseAuth,required this.repository}) : super(MainScreenState.empty()) {
 
     on<FetchData>(_fetchData);
+    on<UpdateAppMode>(_updateAppMode);
 
 
     setMode();
@@ -31,6 +33,14 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
           emit(state.copyWith(isAuth: false));
         }
     });
+
+    streamAuthSubscription =firebaseAuth.idTokenChanges().listen(
+            (user) {
+          if(user==null){
+            emit(state.copyWith(isAuth: false));
+          }
+        }
+      );
 
 
 
@@ -58,11 +68,18 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
 
   void setMode() {
     UserTypes appMode;
-    String mode=sharedPrefService.getValue(SharedPrefService.app_mode, UserTypes.client.getString());
-    if(!sharedPrefService.contains(SharedPrefService.app_mode)){
+    if(sharedPrefService.contains(SharedPrefService.app_mode)){
+      String mode=sharedPrefService.getValue(SharedPrefService.app_mode, UserTypes.client.getString());
+      appMode=mode.userType;
+    }else{
+      String mode=UserTypes.client.getString();
       sharedPrefService.putValue(SharedPrefService.app_mode, mode);
+      appMode=mode.userType;
     }
-    appMode=mode.userType;
     emit(state.copyWith(appMode: appMode));
+  }
+
+  FutureOr<void> _updateAppMode(UpdateAppMode event, Emitter<MainScreenState> emit) {
+    setMode();
   }
 }
