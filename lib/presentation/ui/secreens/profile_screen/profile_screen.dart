@@ -1,12 +1,15 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/extenssions/user_types_extenssion.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/core/validator/validator.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
+import 'package:builmeet/presentation/blocs/edit_employee_info_bloc/edit_employee_info_bloc.dart';
+import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart';
 import 'package:builmeet/presentation/blocs/profile_bloc/profile_bloc.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
@@ -86,6 +89,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               email(state),
                               password(state),
                               langs(state),
+                              Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.symmetric(horizontal: 30),
+                                height: 1.5,
+                                color: AppColors.primaryColor.withOpacity(0.2),
+                              ),
                           
                               if(state.appMode==UserTypes.employee)...[
                                 jobs(state),
@@ -160,6 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 trackOutlineWidth: MaterialStateProperty.resolveWith((states) => 0),
                 onChanged: (value){
                   setAppMode(value);
+                  BlocProvider.of<MainScreenBloc>(context).add(NotifyAppModeChanged());
                 }
             ),
           ],
@@ -243,10 +253,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
        isLoading: true,
      );
    }else if(state.fetchingDataStatus==AppStatus.success){
-
      return InfoItem(
        icon: FontAwesomeIcons.donate,
        info: 'Metiers',
+       onEdit: _navToEditEmployeeInfos,
        subInfo: Wrap(
          alignment: WrapAlignment.start,
          crossAxisAlignment: WrapCrossAlignment.start,
@@ -264,6 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }else if(state.fetchingDataStatus==AppStatus.success){
 
       return InfoItem(
+        withIcon: false,
         icon: Icons.location_city,
         info:'Address',
         subInfo: state.userEntity?.address,
@@ -272,6 +283,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return const SizedBox();
   }
   Widget description(ProfileState state) {
+    print('=============AppMode==================${state.appMode}');
     if(state.fetchingDataStatus==AppStatus.loading){
       return InfoItem(
         isLoading: true,
@@ -315,38 +327,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return const SizedBox();
   }
   Widget descriptionWidget(String description,String? url){
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 18,vertical: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(width: 10,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Description',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
-              const SizedBox(height: 10,),
-              Text('$description',style: GoogleFonts.inter(color: Colors.grey,fontWeight: FontWeight.normal),),
-              const SizedBox(height: 10,),
-              if(url!=null)
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxWidth:width*0.9
-                    ),
-                    child: Container(
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)
-                        ),
-                        child: Image.network(url,fit: BoxFit.cover,)
-                    )
-                )
-            ],
-          ),
-          SizedBox(width: 10,),
-          Icon(Icons.edit,color: AppColors.primaryColor,)
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 15,),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Text('Description',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
+        ),
+        const SizedBox(height: 10,),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Text('$description',style: GoogleFonts.inter(color: Colors.grey,fontWeight: FontWeight.normal),),
+        ),
+        const SizedBox(height: 10,),
+        if(url!=null)
+          Container(
+              clipBehavior: Clip.hardEdge,
+              constraints: BoxConstraints(
+                  maxWidth: width*0.9
+              ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(4,4))]
+              ),
+              child: Image.network(url,fit: BoxFit.cover,)
+          )
+      ],
     );
   }
   Widget dialogue(Widget child,String action){
@@ -527,15 +534,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       BlocProvider.of<ProfileBloc>(context).add(UpdatePassword(passController.text));
     }
   }
-  void editLangs(){
 
-  }
-  void editAddress(){
-
-  }
-  void editDescription(){
-
-  }
   void _fetchData() {
     BlocProvider.of<ProfileBloc>(context).add(FetchProfileData());
   }
@@ -543,9 +542,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     BlocProvider.of<ProfileBloc>(context).add(Logout());
   }
   void navToBecomeAnEmployee() async{
-    var result=await GoRouter.of(context).push(Routes.becomeEmployee);
-    if((result is bool) && result){
-      BlocProvider.of<ProfileBloc>(context).add(RefreshData());
+    ProfileBloc profileBloc = BlocProvider.of<ProfileBloc>(context);
+    UserEntity userEntity=profileBloc.state.userEntity!;
+    var result=await GoRouter.of(context).push(Routes.becomeEmployee,extra: userEntity);
+    if(result is UserEntity){
+      profileBloc.add(RefreshData(result));
+    }
+  }
+
+  void _navToEditEmployeeInfos() async{
+    ProfileBloc profileBloc = BlocProvider.of<ProfileBloc>(context);
+    UserEntity userEntity=profileBloc.state.userEntity!;
+    var result = await GoRouter.of(context).push(Routes.editEmployeeInfos,extra: userEntity);
+    if(result is UserEntity){
+      profileBloc.add(RefreshData(result));
     }
   }
 }

@@ -9,6 +9,6 @@ class FetchData extends MainScreenEvent{
 }
 
 
-class UpdateAppMode extends MainScreenEvent{
+class NotifyAppModeChanged extends MainScreenEvent{
 
 }

@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/extenssions/user_types_extenssion.dart';
+import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/exceptions/email_already_in_use.dart';
 import 'package:builmeet/domain/exceptions/weak_pass_exception.dart';
@@ -16,8 +18,10 @@ part 'register_state.dart';
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   Repository repository;
+  SharedPrefService sharedPrefService;
 
-  RegisterBloc({required this.repository}) : super(RegisterState.empty()) {
+  RegisterBloc({required this.repository,required this.sharedPrefService}) : super(RegisterState.empty()) {
+
     on<UserRegister>(_register);
     on<PickImage>(_pickImage);
   }
@@ -38,7 +42,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       );
 
       await repository.register(userEntity);
-
+      setAppMode(userEntity);
       emit(state.copyWith(registerStatus: AppStatus.success));
 
     }on WeakPassException catch(ex){
@@ -58,5 +62,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       File file=File(image.path);
       emit(state.copyWith(profImage: file));
     }
+  }
+
+  void setAppMode(UserEntity userEntity) {
+    String appMode=userEntity.type!.getString();
+    sharedPrefService.putValue(SharedPrefService.app_mode, appMode);
   }
 }

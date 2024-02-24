@@ -18,7 +18,8 @@ class BecomeEmployeeBloc extends Bloc<BecomeEmployeeEvent, BecomeEmployeeState> 
   SharedPrefService sharedPrefService;
 
 
-  BecomeEmployeeBloc({required this.repository,required this.sharedPrefService}) : super(BecomeEmployeeState.empty()) {
+  BecomeEmployeeBloc({required this.repository,required this.sharedPrefService,required UserEntity userEntity})
+      : super(BecomeEmployeeState.empty(userEntity)) {
 
     on<AddMetier>(_addMetier);
     on<DeleteMetier>(_deleteMetier);
@@ -50,20 +51,18 @@ class BecomeEmployeeBloc extends Bloc<BecomeEmployeeEvent, BecomeEmployeeState> 
   FutureOr<void> _confirmer(Confimer event, Emitter<BecomeEmployeeState> emit) async{
     try{
       emit(state.copyWith(becomeEmplyeeStatus: AppStatus.loading));
-      UserEntity userEntity=await repository.getCurrentUser();
-      userEntity=userEntity.copyWith(
-        metiers: state.metiers,
-        address: event.address,
-        description: event.description,
-        document: state.document,
-        type: UserTypes.employee
+      UserEntity userEntity=state.userEntity!.copyWith(
+          metiers: state.metiers,
+          address: event.address,
+          description: event.description,
+          document: state.document,
+          type: UserTypes.employee
       );
-      UserEntity userEntityRes=await repository.bacomeEmployee(userEntity);
+      UserEntity userEntityRes=await repository.setEmployeeData(userEntity);
       setAppMode(userEntityRes);
-      emit(state.copyWith(becomeEmplyeeStatus: AppStatus.success));
+      emit(state.copyWith(becomeEmplyeeStatus: AppStatus.success,userEntity: userEntityRes));
     }catch(ex){
       emit(state.copyWith(becomeEmplyeeStatus: AppStatus.error));
-      rethrow;
     }
   }
 

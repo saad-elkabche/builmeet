@@ -22,7 +22,8 @@ abstract class Repository{
   Future<UserEntity> updateEmail(UserEntity userEntity);
   Future<UserEntity> updatePassword(UserEntity userEntity);
   Future<UserEntity> updateProfileImg(UserEntity userEntity);
-  Future<UserEntity> bacomeEmployee(UserEntity userEntity);
+  Future<UserEntity> setEmployeeData(UserEntity userEntity);
+
 
 
 }

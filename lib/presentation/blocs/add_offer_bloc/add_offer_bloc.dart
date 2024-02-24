@@ -14,10 +14,10 @@ part 'add_offer_state.dart';
 class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
 
   Repository repository;
-  UserEntity me;
 
 
-  AddOfferBloc({required this.repository,required this.me}) : super(AddOfferState.empty()) {
+
+  AddOfferBloc({required this.repository}) : super(AddOfferState.empty()) {
     on<CalculeFees>(_calculateFees);
     on<CreateOffer>(_createOffer);
   }
@@ -72,6 +72,7 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
   FutureOr<void> _createOffer(CreateOffer event, Emitter<AddOfferState> emit) async{
     try{
       emit(state.copyWith(addOfferStatus: AppStatus.loading));
+
       add(CalculeFees(nbHour: event.nbHour,
           price: event.price,
           isByHour: event.isByHour,
@@ -79,10 +80,13 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
           dateEnd: event.dateEnd
         )
       );
+
+      UserEntity creator=await repository.getCurrentUser();
+
       OfferEntity offerEntity=OfferEntity(
         pricingType: event.isByHour?PricingTypes.hourly:PricingTypes.total,
         orderStatus: OrderStatus.pending,
-        creator: me,
+        creator: creator,
         dateDebut: event.dateBegin,
         dateFin: event.dateEnd,
         nbHourPerDay: int.parse(event.nbHour),

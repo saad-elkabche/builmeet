@@ -3,6 +3,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/core/validator/validator.dart';
@@ -31,8 +32,9 @@ class RegisterSecren extends StatefulWidget {
 
   static Widget page(){
     Repository repository=Dependencies.get<Repository>();
+    SharedPrefService sharedPrefService=Dependencies.get<SharedPrefService>();
     return BlocProvider<RegisterBloc>(
-      create: (context)=>RegisterBloc(repository: repository),
+      create: (context)=>RegisterBloc(sharedPrefService: sharedPrefService,repository: repository),
       child:RegisterSecren() ,
     );
   }

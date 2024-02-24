@@ -57,10 +57,10 @@ class DBService{
     UserModel newUser=await getUser(userModel.uid!);
     return newUser;
   }
-  Future<UserModel> becomeAnEmployee(UserModel userModel)async{
+  Future<UserModel> setEmployeeData(UserModel userModel)async{
     await firebaseFirestore.collection(userCollectionName)
         .doc(userModel.uid)
-        .update(userModel.jsonForBecomeEmployee());
+        .update(userModel.jsonEmployeeData());
     UserModel userModelRes=await getUser(userModel.uid!);
     return userModelRes;
   }

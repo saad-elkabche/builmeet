@@ -169,7 +169,7 @@ class UserModel{
       'profilePicUrl':profilePicUrl,
     };
   }
-  Map<String,dynamic> jsonForBecomeEmployee(){
+  Map<String,dynamic> jsonEmployeeData(){
     return {
       'documentUrl':documentUrl,
       'address':address,

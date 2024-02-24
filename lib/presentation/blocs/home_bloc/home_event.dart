@@ -5,9 +5,7 @@ abstract class HomeEvent {}
 
 
 class FetchOffers extends HomeEvent{
-  UserTypes appMode;
-
-  FetchOffers(this.appMode);
+  FetchOffers();
 }
 
 

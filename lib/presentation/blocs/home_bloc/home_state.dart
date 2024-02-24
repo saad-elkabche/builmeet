@@ -5,15 +5,17 @@ class HomeState {
   AppStatus? fetchingDataStatus;
   List<OfferEntity>? offers;
   String? error;
+  UserTypes? appMode;
 
   HomeState.empty();
 
-  HomeState({this.fetchingDataStatus, this.offers, this.error});
+  HomeState({this.fetchingDataStatus, this.appMode,this.offers, this.error});
 
 
-  HomeState copyWith({AppStatus? fetchDataStatus, String? error, List<OfferEntity>? offers}){
+  HomeState copyWith({AppStatus? fetchDataStatus,UserTypes? appMode,String? error, List<OfferEntity>? offers}){
     return HomeState(
-      error: error ,
+      error: error,
+      appMode: appMode ?? this.appMode,
       fetchingDataStatus: fetchDataStatus ?? fetchingDataStatus,
       offers: offers ?? this.offers
     );

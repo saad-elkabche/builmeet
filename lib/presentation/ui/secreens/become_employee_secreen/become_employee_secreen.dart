@@ -5,6 +5,7 @@ import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/core/validator/validator.dart';
+import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/blocs/become_employee_bloc/become_employee_bloc.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
@@ -28,11 +29,11 @@ class BecomeEmployeeSecreen extends StatefulWidget {
 
 
 
-  static Widget page(){
+  static Widget page(UserEntity userEntity){
     Repository repository=Dependencies.get<Repository>();
     SharedPrefService sharedPrefService=Dependencies.get<SharedPrefService>();
     return BlocProvider<BecomeEmployeeBloc>(
-        create: (context)=>BecomeEmployeeBloc(repository: repository,sharedPrefService: sharedPrefService),
+        create: (context)=>BecomeEmployeeBloc(repository: repository,sharedPrefService: sharedPrefService,userEntity: userEntity),
       child: BecomeEmployeeSecreen(),
     );
   }
@@ -156,16 +157,16 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
                 BlocBuilder<BecomeEmployeeBloc,BecomeEmployeeState>(
                     builder: (context,state){
                       if(state.document!=null){
-                        return ConstrainedBox(
+                        return Container(
+                            clipBehavior: Clip.hardEdge,
                             constraints: BoxConstraints(
-                              maxWidth:width*0.9
+                                maxWidth:width*0.9
                             ),
-                            child: Container(
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)
-                                ),
-                                child: Image.memory(state.document!.readAsBytesSync(),fit: BoxFit.cover,)));
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(4,4))]
+                            ),
+                            child: Image.memory(state.document!.readAsBytesSync(),fit: BoxFit.cover,));
                       }
                       return SizedBox();
                     }
@@ -250,7 +251,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
       showInfoDialogue(MessageUi('Error', AppStatus.error, 'Okay'), context, () { hideDialogue(context);});
     }else if(state.becomeEmployeeStatus==AppStatus.success){
       hideDialogue(context);
-      GoRouter.of(context).pop(true);
+      GoRouter.of(context).pop(state.userEntity);
     }
   }
 }

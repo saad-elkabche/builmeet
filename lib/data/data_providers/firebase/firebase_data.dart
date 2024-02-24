@@ -27,7 +27,8 @@ abstract class FirebaseData{
   Future<UserModel> updateProfilImg(UserModel user);
 
 
-  Future<UserModel> becomeAEmployee(UserModel user);
+  Future<UserModel> setEmployeeData(UserModel user);
+
 
 
 }
@@ -121,13 +122,13 @@ class FirebaseDataIml extends FirebaseData{
   }
 
   @override
-  Future<UserModel> becomeAEmployee(UserModel user) async{
-    String? documentUrl;
+  Future<UserModel> setEmployeeData(UserModel user) async{
+    String? documentUrl=user.documentUrl;
     if(user.document!=null){
       documentUrl=await storageService.uploadFile(user.document!, StorageService.documentsFolderName, '${user.uid}.jpg');
     }
     user=user.copyWith(documentUrl: documentUrl);
-    UserModel userModelRes=await dbService.becomeAnEmployee(user);
+    UserModel userModelRes=await dbService.setEmployeeData(user);
     return userModelRes;
   }
 

@@ -92,11 +92,13 @@ class RepositoryIml extends Repository{
   }
 
   @override
-  Future<UserEntity> bacomeEmployee(UserEntity userEntity) async{
+  Future<UserEntity> setEmployeeData(UserEntity userEntity) async{
     UserModel userModel=UserModel.toUserModel(userEntity);
-    UserModel userModelRes=await firebaseData.becomeAEmployee(userModel);
+    UserModel userModelRes=await firebaseData.setEmployeeData(userModel);
     return userModelRes.toUserEntity();
   }
+
+
 
 
 

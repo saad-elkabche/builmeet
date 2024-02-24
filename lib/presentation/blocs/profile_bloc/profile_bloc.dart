@@ -154,6 +154,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   FutureOr<void> _refreshData(RefreshData event, Emitter<ProfileState> emit) {
     setAppMode();
-    add(FetchProfileData());
+    emit(state.copyWith(user: event.userEntity));
   }
 }

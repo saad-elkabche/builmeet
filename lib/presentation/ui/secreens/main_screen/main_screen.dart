@@ -25,14 +25,12 @@ class MainScreen extends StatefulWidget {
 
    static Widget page(StatefulNavigationShell child){
 
-     Repository repository=Dependencies.get<Repository>();
+
      FirebaseAuth firebaseAuth=Dependencies.get<FirebaseAuth>();
-     SharedPrefService sharedPrefService=Dependencies.get<SharedPrefService>();
 
      return BlocProvider<MainScreenBloc>(
          create: (context)=>MainScreenBloc(
-           sharedPrefService: sharedPrefService,
-           repository: repository,
+
            firebaseAuth: firebaseAuth
          ),
        child: MainScreen(child: child),
@@ -49,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<MainScreenBloc>(context).add(FetchData());
+
   }
 
 
@@ -85,7 +83,6 @@ class _MainScreenState extends State<MainScreen> {
 
 
   void _NavTap(int index) {
-
     widget.child.goBranch(
         index,
       initialLocation: index==widget.child.currentIndex,
@@ -93,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _listener(BuildContext context, MainScreenState state) {
-    if(!state.isAuth){
+    if(state is UserLogout){
       GoRouter goRouter=GoRouter.of(context);
       while(goRouter.canPop()){
         goRouter.pop();

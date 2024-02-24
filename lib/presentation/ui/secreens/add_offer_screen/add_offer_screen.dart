@@ -30,10 +30,10 @@ class AddOfferScreen extends StatefulWidget {
 
   AddOfferScreen({Key? key}) : super(key: key);
 
-  static Widget page(UserEntity me){
+  static Widget page(){
     Repository repository=Dependencies.get<Repository>();
     return BlocProvider<AddOfferBloc>(
-        create: (context)=>AddOfferBloc(repository: repository,me: me),
+        create: (context)=>AddOfferBloc(repository: repository),
       child: AddOfferScreen(),
     );
   }
@@ -478,9 +478,10 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
     }else if(state.addOfferStatus==AppStatus.success){
       hideDialogue(context);
       showInfoDialogue(MessageUi('Offer is Created', AppStatus.success, 'Okay'), context, () {
+        hideDialogue(context);
         GoRouter goRouter=GoRouter.of(context);
         while(goRouter.canPop()){
-          goRouter.pop();
+          goRouter.pop(true);
         }
       });
     }

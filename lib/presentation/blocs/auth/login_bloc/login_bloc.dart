@@ -46,9 +46,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void setMode(UserEntity userRes) {
-    if(sharedPrefService.contains(SharedPrefService.app_mode)){
-      return;
-    }
     String mode=userRes.type!.getString();
     sharedPrefService.putValue(SharedPrefService.app_mode, mode);
   }

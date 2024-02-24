@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/extenssions/user_types_extenssion.dart';
+import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart';
@@ -14,8 +16,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   StreamSubscription<MainScreenState>? streamSubscription;
   Repository repository;
-  HomeBloc({required this.repository}) : super(HomeState.empty()) {
+  SharedPrefService sharedPrefService;
 
+  HomeBloc({required this.repository,required this.sharedPrefService}) : super(HomeState.empty()) {
+    setAppMode();
     on<FetchOffers>(_fetchData);
     on<ListeneToMainScreen>(_listenToMainSecreenState);
   }
@@ -23,8 +27,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 
   FutureOr<void> _listenToMainSecreenState(ListeneToMainScreen event, Emitter<HomeState> emit) {
-    event.mainScreenBloc.stream.listen(
-     (event) {
+    streamSubscription = event.mainScreenBloc.stream.listen(
+     (mainSecreenState) {
+       if(mainSecreenState is AppModeChanged){
+          setAppMode();
+          add(FetchOffers());
+       }
 
     });
   }
@@ -33,7 +41,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try{
       emit(state.copyWith(fetchDataStatus: AppStatus.loading));
       List<OfferEntity> offers;
-      if(event.appMode==UserTypes.client){
+      if(state.appMode==UserTypes.client){
         offers=await repository.getOfferForClient();
       }else{
         offers=await repository.getOfferForClient();
@@ -41,7 +49,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(state.copyWith(fetchDataStatus: AppStatus.success,offers: offers));
     }catch(ex){
       emit(state.copyWith(fetchDataStatus: AppStatus.error));
-      rethrow;
     }
+  }
+
+  void setAppMode() {
+    if(!sharedPrefService.contains(SharedPrefService.app_mode)){
+      sharedPrefService.putValue(SharedPrefService.app_mode,UserTypes.client.getString());
+    }
+    String mode=sharedPrefService.getValue(SharedPrefService.app_mode, UserTypes.client.getString());
+    UserTypes appMode=mode.userType;
+    emit(state.copyWith(appMode: appMode));
+  }
+
+  @override
+  Future<void> close() {
+    streamSubscription?.cancel();
+    return super.close();
   }
 }

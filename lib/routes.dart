@@ -2,6 +2,7 @@
 
 
 import 'package:builmeet/domain/entities/user_entity.dart';
+import 'package:builmeet/presentation/ui/secreens/edit_employee_infos_secreen/edit_employee_infos_secreen.dart';
 import 'package:builmeet/presentation/ui/secreens/secreens.dart';
 import 'package:builmeet/test_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class Routes{
   static const String profile='/profile';
   static const String addOffer='/addOffer';
   static const String becomeEmployee='/employee';
+  static const String editEmployeeInfos='/employeeEdit';
 
   GlobalKey<NavigatorState> parentKey=GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> childKey=GlobalKey<NavigatorState>();
@@ -92,22 +94,36 @@ class Routes{
         ),
         GoRoute(
             path: addOffer,
-            redirect: (context,state){
-              if(state.extra==null || state.extra is! UserEntity){
-                return '/';
-              }
-            },
             pageBuilder: (context,state){
-              UserEntity me=state.extra as UserEntity;
               return NoTransitionPage(
-                  child: AddOfferScreen.page(me)
+                  child: AddOfferScreen.page()
               );
             }
         ),
 
         GoRoute(
-            path: becomeEmployee,
-          pageBuilder: (context,state)=>NoTransitionPage(child: BecomeEmployeeSecreen.page())
+          path: becomeEmployee,
+          redirect: (context,state){
+            if(state.extra is! UserEntity){
+              return profile;
+            }
+          },
+          pageBuilder: (context,state){
+            UserEntity userEntity=state.extra as UserEntity;
+            return NoTransitionPage(child: BecomeEmployeeSecreen.page(userEntity));
+          }
+        ),
+        GoRoute(
+            path: editEmployeeInfos,
+            redirect: (context,state){
+              if(state.extra is! UserEntity){
+                return profile;
+              }
+            },
+            pageBuilder: (context,state){
+              UserEntity user=state.extra as UserEntity;
+              return NoTransitionPage(child: EditEmployeeInfosSecreen.page(userEntity: user));
+            }
         )
 
 

@@ -42,5 +42,7 @@ class PickImageProfle extends ProfileEvent{
 }
 
 class RefreshData extends ProfileEvent{
+    UserEntity userEntity;
 
+    RefreshData(this.userEntity);
 }
