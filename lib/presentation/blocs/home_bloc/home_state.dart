@@ -7,14 +7,19 @@ class HomeState {
   String? error;
   UserTypes? appMode;
 
+  AppStatus? operationStatus;
+  String? message;
+
   HomeState.empty();
 
-  HomeState({this.fetchingDataStatus, this.appMode,this.offers, this.error});
+  HomeState({this.fetchingDataStatus,this.operationStatus,this.message, this.appMode,this.offers, this.error});
 
 
-  HomeState copyWith({AppStatus? fetchDataStatus,UserTypes? appMode,String? error, List<OfferEntity>? offers}){
+  HomeState copyWith({AppStatus? fetchDataStatus,String? message,AppStatus? operationStatus,UserTypes? appMode,String? error, List<OfferEntity>? offers}){
     return HomeState(
       error: error,
+      message: message,
+      operationStatus: operationStatus ,
       appMode: appMode ?? this.appMode,
       fetchingDataStatus: fetchDataStatus ?? fetchingDataStatus,
       offers: offers ?? this.offers

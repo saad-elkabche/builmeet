@@ -16,7 +16,6 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
 
 
   late StreamSubscription<User?> streamAuthSubscription;
-  late StreamSubscription<User?> streamAuthSubscription1;
 
 
   MainScreenBloc({required FirebaseAuth firebaseAuth}) : super(IntialState()) {
@@ -33,13 +32,7 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
         }
     });
 
-    streamAuthSubscription1 =firebaseAuth.idTokenChanges().listen(
-            (user) {
-          if(user==null){
-            emit(UserLogout());
-          }
-        }
-      );
+
 
 
 
@@ -54,7 +47,7 @@ class MainScreenBloc extends Bloc<MainScreenEvent, MainScreenState> {
   @override
   Future<void> close() {
     streamAuthSubscription.cancel();
-    streamAuthSubscription1.cancel();
+
     return super.close();
   }
 

@@ -3,6 +3,7 @@
 
 
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 
 class OfferEntity {
@@ -19,6 +20,7 @@ class OfferEntity {
   OrderStatus? orderStatus;
   UserEntity? creator;
   UserEntity? employee;
+  InterestEntity? interestEntity;
   int? countInterests;
 
   OfferEntity({
@@ -35,7 +37,32 @@ class OfferEntity {
     this.orderStatus,
     this.creator,
     this.employee,
+    this.interestEntity,
     this.countInterests});
+
+   set setInterest(InterestEntity interestEntity){
+    this.interestEntity=interestEntity;
+  }
+
+  OfferEntity copyWith({InterestEntity? interestEntity}){
+    return OfferEntity(
+    offerId: this.offerId,
+    metier: this.metier,
+    description: this.description,
+    address: this.address,
+    price: this.price,
+    pricingType: this.pricingType,
+    dateCreation: this.dateCreation,
+    dateDebut: this.dateDebut,
+    dateFin: this.dateFin,
+    nbHourPerDay: this.nbHourPerDay,
+    orderStatus: this.orderStatus,
+    creator: this.creator,
+    employee: this.employee,
+    interestEntity:interestEntity ?? this.interestEntity,
+    countInterests: this.countInterests
+    );
+  }
 
   @override
   String toString() {

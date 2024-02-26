@@ -6,6 +6,7 @@
 
 import 'package:builmeet/data/data_providers/firebase/auth_service/auth_service.dart';
 import 'package:builmeet/data/data_providers/firebase/db_service/db_service.dart';
+import 'package:builmeet/data/data_providers/firebase/models/interest_model.dart';
 import 'package:builmeet/data/data_providers/firebase/models/offer_model.dart';
 import 'package:builmeet/data/data_providers/firebase/models/user_model.dart';
 import 'package:builmeet/data/data_providers/firebase/storage_service/storage_service.dart';
@@ -28,6 +29,12 @@ abstract class FirebaseData{
 
 
   Future<UserModel> setEmployeeData(UserModel user);
+
+
+  Future<InterestModel> setEmployeeIntersting(InterestModel interestModel);
+  Future<void> setNotInterested(OfferModel offerModel);
+
+  Future<List<InterestModel>> getInterests(OfferModel offerModel);
 
 
 
@@ -87,7 +94,8 @@ class FirebaseDataIml extends FirebaseData{
 
   @override
   Future<List<OfferModel>> getOfferForEmployee() async{
-    List<OfferModel> offers=await dbService.getOffersForEmployee();
+    String emplyeeId=authService.getCurrentUser().uid;
+    List<OfferModel> offers=await dbService.getOffersForEmployee(emplyeeId);
     return offers;
   }
 
@@ -130,6 +138,24 @@ class FirebaseDataIml extends FirebaseData{
     user=user.copyWith(documentUrl: documentUrl);
     UserModel userModelRes=await dbService.setEmployeeData(user);
     return userModelRes;
+  }
+
+  @override
+  Future<InterestModel> setEmployeeIntersting(InterestModel interestModel) async{
+    InterestModel interestModelRes=await dbService.setEmployeeIntersted(interestModel);
+    return interestModelRes;
+  }
+
+  @override
+  Future<void> setNotInterested(OfferModel offerModel) async{
+    String myId=authService.getCurrentUser().uid;
+    await dbService.setEmployeeNotIntersted(offerModel, myId);
+  }
+
+  @override
+  Future<List<InterestModel>> getInterests(OfferModel offerModel) async{
+    List<InterestModel> interests=await dbService.getInterets(offerModel);
+    return interests;
   }
 
 

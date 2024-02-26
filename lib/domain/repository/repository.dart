@@ -3,6 +3,7 @@
 
 
 import 'package:builmeet/data/data_providers/firebase/models/offer_model.dart';
+import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 
@@ -23,6 +24,12 @@ abstract class Repository{
   Future<UserEntity> updatePassword(UserEntity userEntity);
   Future<UserEntity> updateProfileImg(UserEntity userEntity);
   Future<UserEntity> setEmployeeData(UserEntity userEntity);
+
+
+  Future<InterestEntity> setEmployeeIntersting(InterestEntity interestEntity);
+  Future<void> setEmployeeNotIntersting(OfferEntity offerEntity);
+
+  Future<List<InterestEntity>> getInterests(OfferEntity offerEntity);
 
 
 

@@ -4,7 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/extenssions/user_types_extenssion.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
+import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
+import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart';
 import 'package:meta/meta.dart';
@@ -22,6 +24,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     setAppMode();
     on<FetchOffers>(_fetchData);
     on<ListeneToMainScreen>(_listenToMainSecreenState);
+    on<EmployeeInteresser>(_employeeIntersted);
+    on<EmployeeNotIntersted>(_employeeNotIntersted);
+
   }
 
 
@@ -44,11 +49,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if(state.appMode==UserTypes.client){
         offers=await repository.getOfferForClient();
       }else{
-        offers=await repository.getOfferForClient();
+        offers=await repository.getOffersForEmployee();
       }
       emit(state.copyWith(fetchDataStatus: AppStatus.success,offers: offers));
     }catch(ex){
       emit(state.copyWith(fetchDataStatus: AppStatus.error));
+      rethrow;
     }
   }
 
@@ -66,4 +72,36 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     streamSubscription?.cancel();
     return super.close();
   }
+
+  FutureOr<void> _employeeIntersted(EmployeeInteresser event, Emitter<HomeState> emit) async{
+    try{
+      emit(state.copyWith(operationStatus: AppStatus.loading));
+      UserEntity userEntity=await repository.getCurrentUser();
+      InterestEntity interestEntity=InterestEntity(
+        interestPrice: event.price,
+        offer: event.offerEntity,
+        user: userEntity,
+        interestStatus: InterestsStatus.pending,
+      );
+      InterestEntity interestEntityRes=await repository.setEmployeeIntersting(interestEntity);
+      event.offerEntity.setInterest=interestEntityRes;
+      emit(state.copyWith(operationStatus: AppStatus.success));
+    }catch(ex){
+      emit(state.copyWith(operationStatus: AppStatus.error));
+      rethrow;
+    }
+  }
+
+  FutureOr<void> _employeeNotIntersted(EmployeeNotIntersted event, Emitter<HomeState> emit) async{
+      try{
+        emit(state.copyWith(operationStatus: AppStatus.loading));
+        await repository.setEmployeeNotIntersting(event.offerEntity);
+        state.offers?.removeAt(event.index);
+        emit(state.copyWith(operationStatus: AppStatus.success));
+      }catch(ex){
+        emit(state.copyWith(operationStatus: AppStatus.error));
+        rethrow;
+      }
+  }
+
 }

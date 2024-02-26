@@ -10,7 +10,8 @@ class InterestEntity {
   double? interestPrice;
   UserEntity? user;
   OfferEntity? offer;
+  DateTime? dateCreation;
 
   InterestEntity(
-      {this.interestStatus, this.interestPrice, this.user, this.offer});
+      {this.interestStatus,this.dateCreation, this.interestPrice, this.user, this.offer});
 }

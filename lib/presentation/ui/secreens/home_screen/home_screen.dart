@@ -1,16 +1,23 @@
+
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
+import 'package:builmeet/core/utils/show_dialogue_infos.dart';
+import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/blocs/home_bloc/home_bloc.dart';
 import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
+import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
+import 'package:builmeet/presentation/ui/components/refresh_widget.dart';
+import 'package:builmeet/presentation/ui/secreens/home_screen/components/employee_dialogue.dart';
 import 'package:builmeet/presentation/ui/secreens/home_screen/components/floating_action_location.dart';
 import 'package:builmeet/presentation/ui/secreens/home_screen/components/offer_widget_client.dart';
+import 'package:builmeet/presentation/ui/secreens/home_screen/components/offers_body.dart';
 import 'package:builmeet/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +44,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  late double width;
+  late double height;
 
   @override
   void initState() {
@@ -47,6 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    width=MediaQuery.sizeOf(context).width;
+    height=MediaQuery.sizeOf(context).height;
+
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
@@ -60,7 +73,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: AppColors.primaryColor, fontWeight: FontWeight.bold),
               ),
             ),
-            body:_body(state),
+            body:Column(
+              children: [
+                Expanded(
+                    child: RefreshWidget(
+                        refresh:()async{
+                          _fetchData();
+                          await Future.delayed(const Duration(seconds: 2));
+                          },
+                        child: _body(state))
+                ),
+                BlocListener<HomeBloc,HomeState>(
+                    listener: _listener,
+                    child:const SizedBox()
+                )
+              ],
+            ),
             floatingActionButtonLocation: MyFloatingActionLocation(
                 bottomNavHeight: 63, margin: 15),
             floatingActionButton:_floatingActionButton(state)
@@ -95,14 +123,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
     }else if(state.fetchingDataStatus==AppStatus.success){
-      return ListView(
-          children: [
-            ...List.generate(state.offers?.length ?? 0, (index) => OfferWidgetClient(
-              offerEntity: state.offers!.elementAt(index),
-            )),
-            const SizedBox(height: 70,)
-          ]
-      );
+      return OffersBody(
+        appMode: state.appMode!,
+        isLoading: false,
+        onPasInterss: onEmployeeNotInressted,
+        onInterss: onEmployeeInteress,
+        onLesIntersses: onClientLesInteresse,
+        onStop: onClientStop,
+        offers:state.offers ,);
     }
     return const SizedBox();
   }
@@ -123,6 +151,54 @@ class _HomeScreenState extends State<HomeScreen> {
     BlocProvider.of<HomeBloc>(context).add(ListeneToMainScreen(mainScreenBloc));
   }
 
+
+
+
+  void onClientStop(OfferEntity offer) {
+    print('client stop');
+  }
+
+  void onClientLesInteresse(OfferEntity offer) {
+    GoRouter.of(context).push(Routes.offerInterests,extra: offer);
+  }
+
+  void onEmployeeInteress(OfferEntity offer) async{
+    var result=await showDialog(
+        context: context,
+        builder: (context){
+          return EmployeeDialogue();
+        }
+    );
+
+    if((result is bool) && result ){
+      BlocProvider.of<HomeBloc>(context).add(EmployeeInteresser(offerEntity: offer));
+    }else if(result is double){
+      BlocProvider.of<HomeBloc>(context).add(EmployeeInteresser(offerEntity: offer,price: result));
+    }
+  }
+
+  void onEmployeeNotInressted(OfferEntity offer,int index) {
+    BlocProvider.of<HomeBloc>(context).add(EmployeeNotIntersted(offerEntity: offer, index: index));
+  }
+
+
+
+
+
+
+
+
+  void _listener(BuildContext context, HomeState state) {
+    if(state.operationStatus==AppStatus.loading){
+      showProgressBar(context);
+    }else if(state.operationStatus==AppStatus.error){
+      hideDialogue(context);
+      showInfoDialogue(MessageUi('Error', AppStatus.error, 'Okey'), context, () {hideDialogue(context); });
+    }else if(state.operationStatus==AppStatus.success){
+      hideDialogue(context);
+      showInfoDialogue(MessageUi('Success', AppStatus.success, 'Okey'), context, () {hideDialogue(context); });
+    }
+  }
 }
 
 

@@ -25,6 +25,7 @@ class OfferModel{
   String? orderStatus;
   UserModel? creator;
   UserModel? employee;
+  InterestModel? myInterest;
   int? interestsCount;
 
 
@@ -42,7 +43,8 @@ class OfferModel{
       this.orderStatus,
       this.creator,
       this.employee,
-      this.interestsCount
+      this.interestsCount,
+      this.myInterest
       });
 
 
@@ -114,10 +116,11 @@ class OfferModel{
       address: address,
       description: description,
       countInterests: interestsCount,
+      interestEntity: myInterest?.toInterestEntity()
     );
   }
 
-  OfferModel copyWith({int? interestCount,UserModel? employee,UserModel? creator}){
+  OfferModel copyWith({int? interestsCount,InterestModel? interestModel,UserModel? employee,UserModel? creator}){
     return OfferModel(
       employee: employee ?? this.employee,
       interestsCount: interestsCount ?? this.interestsCount,
@@ -132,8 +135,15 @@ class OfferModel{
       orderStatus: orderStatus,
       pricingType: pricingType,
       dateCreation: dateCreation,
-      offerId: offerId
+      offerId: offerId,
+      myInterest: interestModel ?? myInterest
     );
+  }
+
+  Map<String,dynamic> jsonForNotInterested(){
+    return {
+      'offerId':offerId
+    };
   }
 
 }

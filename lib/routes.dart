@@ -1,6 +1,7 @@
 
 
 
+import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/presentation/ui/secreens/edit_employee_infos_secreen/edit_employee_infos_secreen.dart';
 import 'package:builmeet/presentation/ui/secreens/secreens.dart';
@@ -22,6 +23,7 @@ class Routes{
   static const String addOffer='/addOffer';
   static const String becomeEmployee='/employee';
   static const String editEmployeeInfos='/employeeEdit';
+  static const String offerInterests='/offerInterests';
 
   GlobalKey<NavigatorState> parentKey=GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> childKey=GlobalKey<NavigatorState>();
@@ -124,6 +126,21 @@ class Routes{
               UserEntity user=state.extra as UserEntity;
               return NoTransitionPage(child: EditEmployeeInfosSecreen.page(userEntity: user));
             }
+        ),
+
+        GoRoute(
+            path: offerInterests,
+            redirect: (context,state){
+              if(state.extra is! OfferEntity){
+                return home;
+              }
+            },
+            pageBuilder: (context,state){
+              OfferEntity offerEntity=state.extra as OfferEntity;
+              return NoTransitionPage(
+                  child:OfferInterestsScreen.page(offerEntity: offerEntity)
+              );
+          }
         )
 
 

@@ -6,8 +6,10 @@
 
 
 import 'package:builmeet/data/data_providers/firebase/firebase_data.dart';
+import 'package:builmeet/data/data_providers/firebase/models/interest_model.dart';
 import 'package:builmeet/data/data_providers/firebase/models/offer_model.dart';
 import 'package:builmeet/data/data_providers/firebase/models/user_model.dart';
+import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
@@ -96,6 +98,27 @@ class RepositoryIml extends Repository{
     UserModel userModel=UserModel.toUserModel(userEntity);
     UserModel userModelRes=await firebaseData.setEmployeeData(userModel);
     return userModelRes.toUserEntity();
+  }
+
+  @override
+  Future<InterestEntity> setEmployeeIntersting(InterestEntity interestEntity) async{
+      InterestModel interestModel=InterestModel.toInterestModel(interestEntity);
+      InterestModel interestModelRes=await firebaseData.setEmployeeIntersting(interestModel);
+      return interestModelRes.toInterestEntity();
+  }
+
+  @override
+  Future<void> setEmployeeNotIntersting(OfferEntity offerEntity) async{
+    OfferModel offerModel=OfferModel.toOfferModel(offerEntity);
+    await firebaseData.setNotInterested(offerModel);
+  }
+
+  @override
+  Future<List<InterestEntity>> getInterests(OfferEntity offerEntity) async{
+   OfferModel offerModel=OfferModel.toOfferModel(offerEntity);
+    List<InterestModel> interests=await firebaseData.getInterests(offerModel);
+    List<InterestEntity> interstsEntity=List.from(interests.map((e) => e.toInterestEntity()));
+    return interstsEntity;
   }
 
 

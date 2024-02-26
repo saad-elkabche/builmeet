@@ -93,7 +93,7 @@ class OfferWidgetClient extends StatelessWidget {
 
   double calculePrice(){
     if(offerEntity!.pricingType==PricingTypes.total){
-      return offerEntity!.price!;
+      return offerEntity!.price!*calculCommision(10);
     }else{
       double total=calculTotalMission(
           dateBegin: offerEntity!.dateDebut!,
@@ -127,9 +127,10 @@ class OfferWidgetClient extends StatelessWidget {
   }
 
   Widget getAction() {
+    print('==============from presentaion===========${offerEntity?.countInterests}');
     if(offerEntity!.orderStatus==OrderStatus.pending){
       return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           MyCustomButton(name: 'Arreter',
             height: 40,
@@ -137,17 +138,19 @@ class OfferWidgetClient extends StatelessWidget {
             color: Colors.white,
             borderRadius: 20,
             hasBorder: true,
+            horizontalMargin: 0,
             textColor: AppColors.primaryColor,
             borderColor: AppColors.primaryColor,
             onClick:()=> onStopClick?.call(offerEntity!),
           ),
-          MyCustomButton(name: 'Intéressés(${offerEntity!.countInterests ?? 0})',
+          MyCustomButton(name: 'Intéressés(${offerEntity?.countInterests ?? 0})',
             height: 40,
-            width: 140,
+            width: 160,
             color: AppColors.primaryColor,
             borderRadius: 20,
             textColor: Colors.white,
-            onClick:()=> onStopClick?.call(offerEntity!),
+            horizontalMargin: 0,
+            onClick:()=> onInterestClick?.call(offerEntity!),
           ),
 
         ],
@@ -158,20 +161,7 @@ class OfferWidgetClient extends StatelessWidget {
     return SizedBox();
   }
 
-  /*Widget profile(){
-    String? imgProfile=offerEntity.creator?.profilePicUrl;
-    ImageProvider<Object> image=(imgProfile!=null?NetworkImage(imgProfile):AssetImage(AppImages.img_person)) as ImageProvider<Object>;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CircleAvatar(
-          backgroundImage:image,
-          radius: 10,
-        ),
-        Text(offerEntity.creator!.nomComplet!,style: GoogleFonts.inter(color: Colors.black),)
-      ],
-    );
-  }*/
+
 
 }
 

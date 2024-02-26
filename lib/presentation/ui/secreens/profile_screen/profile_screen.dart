@@ -547,6 +547,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var result=await GoRouter.of(context).push(Routes.becomeEmployee,extra: userEntity);
     if(result is UserEntity){
       profileBloc.add(RefreshData(result));
+      BlocProvider.of<MainScreenBloc>(context).add(NotifyAppModeChanged());
     }
   }
 

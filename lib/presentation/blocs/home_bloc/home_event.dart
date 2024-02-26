@@ -14,3 +14,18 @@ class ListeneToMainScreen extends HomeEvent{
 
   ListeneToMainScreen(this.mainScreenBloc);
 }
+
+
+
+class EmployeeInteresser extends HomeEvent{
+  OfferEntity offerEntity;
+  double? price;
+
+  EmployeeInteresser({required this.offerEntity, this.price});
+}
+
+class EmployeeNotIntersted extends HomeEvent{
+  OfferEntity offerEntity;
+  int index;
+  EmployeeNotIntersted({required this.offerEntity,required this.index});
+}

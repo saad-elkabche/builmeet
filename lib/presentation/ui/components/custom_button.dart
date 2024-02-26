@@ -15,6 +15,7 @@ class MyCustomButton extends StatelessWidget {
   double borderRadius,elevation,height,fontSize;
   Alignment alignment;
   bool hasBorder;
+  double horizontalMargin;
 
   MyCustomButton({
      required this.name,
@@ -31,12 +32,13 @@ class MyCustomButton extends StatelessWidget {
     this.iconWidget,
     this.fontSize=17,
     this.hasBorder=false,
-    this.borderColor=AppColors.primaryColor
+    this.borderColor=AppColors.primaryColor,
+    this.horizontalMargin=15
 });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+    return Padding(padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
     child: Center(
       child: Align(
         alignment:alignment ,

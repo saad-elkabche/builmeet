@@ -3,7 +3,7 @@ import 'package:builmeet/core/constants/enums.dart';
 
 extension InterestsStatusExtension on String{
 
-  InterestsStatus get orderStatus{
+  InterestsStatus get interestStatus{
     switch(this){
       case 'pending':return InterestsStatus.pending;
       case 'accepted':return InterestsStatus.accepted;
@@ -18,7 +18,7 @@ extension InterestStatusString on InterestsStatus{
 
   String get interestStatusString{
     switch(this){
-      case InterestsStatus.pending:return 'active';
+      case InterestsStatus.pending:return 'pending';
       case InterestsStatus.accepted:return 'accepted';
       case InterestsStatus.refused:return 'refused';
       default:throw Exception('unknown type!!');
