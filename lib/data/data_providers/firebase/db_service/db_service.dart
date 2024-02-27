@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/extenssions/interests_status_extension.dart';
 import 'package:builmeet/core/extenssions/order_status_extension.dart';
 import 'package:builmeet/data/data_providers/firebase/models/interest_model.dart';
 import 'package:builmeet/data/data_providers/firebase/models/offer_model.dart';
@@ -179,14 +180,33 @@ class DBService{
       )
     ).get()
       .then(
-            (value) {
+            (value) async{
               if(value.docs.isNotEmpty){
-                return InterestModel.fromJson(value.docs.elementAt(0).data());
+                var doc=value.docs.elementAt(0);
+                InterestModel interestModel= InterestModel.fromJson(doc.data());
+                UserModel userModel=await getUser(doc.data()['idEmployee']);
+                OfferModel offerModel=await getOffer(doc.data()['idOffer']);
+                interestModel=interestModel.copyWith(offer: offerModel,user: userModel);
+                return interestModel;
               }
               return null;
             }
     );
     return interestModel;
+  }
+  Future<OfferModel> getOffer(String offerId)async{
+    OfferModel offerModel= await firebaseFirestore.collection(offersCollectionName)
+        .doc(offerId)
+        .get()
+        .then(
+            (value) async{
+          OfferModel offerModel=OfferModel.fromJson(value.data()!, value.id);
+          UserModel? creator=await getUser(value.data()!['creatorId']);
+          offerModel=offerModel.copyWith(creator: creator);
+          return offerModel;
+        }
+    );
+    return offerModel;
   }
 
 
@@ -230,10 +250,131 @@ class DBService{
   }
 
 
+  Future<InterestModel> acceptInterest(InterestModel interestModel)async{
+    await Future.wait(
+      [
+         updateOfferStatus(interestModel.offer!,OrderStatus.active.orderStatusString),
+         updateInterestState(interestModel,InterestsStatus.accepted.interestStatusString),
+         updateOtherInterestStatus(interestModel,InterestsStatus.taken.interestStatusString),
+      ]
+    );
+    InterestModel interestModelRes=(await getInterset(interestModel.offer!.offerId!, interestModel.user!.uid!))!;
+    return interestModelRes;
+  }
+
+  Future<void> updateOfferStatus(OfferModel offer,String newStatus) async{
+    offer=offer.copyWith(orderStatus: newStatus);
+    await firebaseFirestore.collection(offersCollectionName)
+        .doc(offer.offerId)
+        .get()
+        .then(
+            (value)async{
+              value.reference.update(offer.jsonForAcceptOrder());
+            }
+    );
+  }
+
+
+  Future<void> updateOtherInterestStatus(InterestModel interestModel,String newStatus) async{
+
+
+    await firebaseFirestore.collection(interestsCollectionName)
+    .where('idOffer',isEqualTo:interestModel.offer!.offerId)
+    .get()
+    .then(
+            (value)async{
+
+              if(value.docs.isNotEmpty){
+
+                for(var doc in value.docs){
+
+                  if( doc.data()['idEmployee'] != interestModel.user!.uid  ){
+
+                    interestModel=interestModel.copyWith(insterestStatus: newStatus);
+                    await doc.reference.update(interestModel.jsonForUpdateStatus());
+
+                  }
+
+                }
+
+              }
+
+            }
+    );
+  }
+
+  Future<void> updateInterestState(InterestModel interestModel, String newStatus) async{
+    interestModel=interestModel.copyWith(insterestStatus: newStatus);
+    await firebaseFirestore.collection(interestsCollectionName)
+    .where(
+        Filter.and(
+            Filter('idOffer',isEqualTo: interestModel.offer!.offerId),
+            Filter('idEmployee',isEqualTo: interestModel.user!.uid)
+        )
+    ).get()
+    .then(
+            (value)async{
+              if(value.docs.isNotEmpty){
+                var doc=value.docs.elementAt(0);
+                await doc.reference.update(interestModel.jsonForUpdateStatus());
+              }
+            }
+    );
+  }
+
+
+  Future<InterestModel> refuseInterest(InterestModel interestModel)async{
+    interestModel =interestModel.copyWith(insterestStatus: InterestsStatus.refused.interestStatusString);
+    await firebaseFirestore.collection(interestsCollectionName)
+        .where(
+        Filter.and(
+            Filter('idOffer',isEqualTo: interestModel.offer!.offerId),
+            Filter('idEmployee',isEqualTo: interestModel.user!.uid)
+        )
+    ).get()
+        .then(
+            (value)async{
+              if(value.docs.isNotEmpty){
+                var doc=value.docs.elementAt(0);
+                await doc.reference.update(interestModel.jsonForUpdateStatus());
+              }
+            }
+    );
+    InterestModel interestModelRes=(await getInterset(interestModel.offer!.offerId!, interestModel.user!.uid!))!;
+    return interestModelRes;
+  }
 
 
 
+  Future<List<OfferModel>> getAllOffersForClient(String creatorId)async{
+    List<OfferModel> offers=await firebaseFirestore.collection(offersCollectionName)
+        .where('creatorId',isEqualTo: creatorId)
+        .orderBy('dateCreation',descending: true)
+        .get()
+        .then(
+            (value)async{
 
+              if(value.docs.isNotEmpty){
+                List<OfferModel> offers=[];
+                for(var doc in value.docs){
+                  OfferModel offerModel=OfferModel.fromJson(doc.data(), doc.id);
+                  UserModel? creator=await getUser(doc.data()['creatorId']);
+                  UserModel? employee;
+                  if(doc.data()['employeeId']!=null){
+                    employee=await getUser(doc.data()['employeeId']);
+                  }
+                  offerModel=offerModel.copyWith(creator: creator,employee: employee);
+
+                  offers.add(offerModel);
+                }
+                return offers;
+              }
+              return [];
+            }
+    );
+    return offers;
+
+  }
 
 
 

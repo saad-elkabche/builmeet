@@ -1,5 +1,6 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
+import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
@@ -35,8 +36,10 @@ class InterestWidget extends StatelessWidget {
         children: [
           infos(),
           const SizedBox(height: 20),
+
           Row(
             children: [
+              if(interesEntity.interestStatus==InterestsStatus.pending)
               Expanded(
                   child:MyCustomButton(name: 'Refused',
                     color: Colors.white,
@@ -46,20 +49,23 @@ class InterestWidget extends StatelessWidget {
                     textColor: AppColors.primaryColor,
                     onClick: ()=>onRefused?.call(interesEntity),
                     hasBorder: true,
+                    fontSize: 15,
                     borderColor: AppColors.primaryColor,)
               ),
               Expanded(
-                  child:MyCustomButton(name: 'Void',
+                  child:MyCustomButton(name: 'Voir',
                     color: Colors.white,
                     textColor: AppColors.primaryColor,
                     hasBorder: true,
                     horizontalMargin: 3,
+                    fontSize: 15,
                     height: 40,
                     borderRadius: 20,
                     onClick: ()=>onVoir?.call(interesEntity),
                     borderColor: AppColors.primaryColor,
                   )
               ),
+              if(interesEntity.interestStatus==InterestsStatus.pending)
               Expanded(
                   child:MyCustomButton(name: 'Accepter',
                     color: AppColors.primaryColor,
@@ -67,6 +73,7 @@ class InterestWidget extends StatelessWidget {
                     onClick: ()=>onAccept?.call(interesEntity),
                     hasBorder: true,
                     height: 40,
+                    fontSize: 15,
                     borderRadius: 20,
                     horizontalMargin: 3,
                     borderColor: AppColors.primaryColor,)
@@ -82,7 +89,7 @@ class InterestWidget extends StatelessWidget {
       children: [
         Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             interesEntity.user?.profilePicUrl!=null
                 ?
@@ -104,7 +111,7 @@ class InterestWidget extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(width: 15,),
+        const SizedBox(width: 15,),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

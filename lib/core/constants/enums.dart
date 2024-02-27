@@ -16,13 +16,15 @@ enum UserTypes{
 enum OrderStatus{
   active,
   finished,
-  pending
+  pending,
+  stopped
 }
 
 enum InterestsStatus{
   accepted,
   refused,
-  pending
+  pending,
+  taken
 }
 
 enum PricingTypes{

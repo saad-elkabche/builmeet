@@ -53,16 +53,21 @@ class InterestModel{
     );
   }
 
-  InterestModel copyWith({UserModel? user,OfferModel? offer}){
+  InterestModel copyWith({UserModel? user,String? insterestStatus,OfferModel? offer}){
     return InterestModel(
       user: user ?? this.user,
       offer: offer ?? this.offer,
       dateCreation: dateCreation,
-      interestStatus: interestStatus,
+      interestStatus: insterestStatus ?? this.interestStatus,
       interestPrice: interestPrice,
     );
   }
 
+  Map<String,dynamic> jsonForUpdateStatus(){
+    return {
+      'interestStatus':interestStatus
+    };
+  }
 
 
 

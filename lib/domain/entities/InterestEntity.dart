@@ -14,4 +14,15 @@ class InterestEntity {
 
   InterestEntity(
       {this.interestStatus,this.dateCreation, this.interestPrice, this.user, this.offer});
+
+  InterestEntity copyWith({OfferEntity? offerEntity}){
+    return InterestEntity(
+      user: this.user,
+      offer: offerEntity ?? this.offer,
+      interestPrice: interestPrice,
+      interestStatus: interestStatus,
+      dateCreation: dateCreation,
+    );
+  }
+
 }

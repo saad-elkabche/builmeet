@@ -18,6 +18,8 @@ class OfferInterestsBloc extends Bloc<OfferInterestsEvent, OfferInterestsState> 
   OfferInterestsBloc({required this.repository,required OfferEntity offerEntity})
       : super(OfferInterestsState.empty(offerEntity:offerEntity )) {
     on<FetchInterests>(_fetchInterestsOffer);
+    on<AcceptInterest>(_acceptInterest);
+    on<RefuseInterest>(_refuseInterest);
   }
 
   FutureOr<void> _fetchInterestsOffer(FetchInterests event, Emitter<OfferInterestsState> emit) async{
@@ -27,6 +29,33 @@ class OfferInterestsBloc extends Bloc<OfferInterestsEvent, OfferInterestsState> 
       emit(state.copyWith(fetchingInterestsStatus: AppStatus.success,interests: interests));
     }catch(ex){
       emit(state.copyWith(fetchingInterestsStatus: AppStatus.error));
+    }
+  }
+
+  FutureOr<void> _acceptInterest(AcceptInterest event, Emitter<OfferInterestsState> emit) async{
+    try{
+      emit(state.copyWith(operationStatus: AppStatus.loading));
+      InterestEntity interestEntity=event.interestEntity;
+
+      OfferEntity newOffer=interestEntity.offer!.copyWith(employee: interestEntity.user);
+      InterestEntity newInterest=interestEntity.copyWith(offerEntity: newOffer);
+      InterestEntity interestEntityRes=await repository.acceptInterest(newInterest);
+
+      emit(state.copyWith(operationStatus: AppStatus.success));
+      add(FetchInterests());
+    }catch(ex){
+      emit(state.copyWith(operationStatus: AppStatus.error));
+    }
+  }
+
+  FutureOr<void> _refuseInterest(RefuseInterest event, Emitter<OfferInterestsState> emit) async{
+    try{
+      emit(state.copyWith(operationStatus: AppStatus.loading));
+      await repository.refuseInterest(event.interestEntity);
+      emit(state.copyWith(operationStatus: AppStatus.success));
+      add(FetchInterests());
+    }catch(ex){
+      emit(state.copyWith(operationStatus: AppStatus.error));
     }
   }
 }

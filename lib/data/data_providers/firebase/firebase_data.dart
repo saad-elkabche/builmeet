@@ -37,6 +37,13 @@ abstract class FirebaseData{
   Future<List<InterestModel>> getInterests(OfferModel offerModel);
 
 
+  Future<InterestModel> acceptInterest(InterestModel interestModel);
+  Future<InterestModel> refuseInterest(InterestModel interestModel);
+
+
+  Future<List<OfferModel>> getAllOffersForClients();
+
+
 
 }
 
@@ -156,6 +163,26 @@ class FirebaseDataIml extends FirebaseData{
   Future<List<InterestModel>> getInterests(OfferModel offerModel) async{
     List<InterestModel> interests=await dbService.getInterets(offerModel);
     return interests;
+  }
+
+  @override
+  Future<InterestModel> acceptInterest(InterestModel interestModel) async{
+    InterestModel interestModelRes = await dbService.acceptInterest(interestModel);
+    return interestModelRes;
+  }
+
+  @override
+  Future<InterestModel> refuseInterest(InterestModel interestModel) async{
+    InterestModel interestModelRes=await dbService.refuseInterest(interestModel);
+    return interestModelRes;
+  }
+
+  @override
+  Future<List<OfferModel>> getAllOffersForClients() async{
+
+    String myId=authService.getCurrentUser().uid;
+    List<OfferModel> offers=await dbService.getAllOffersForClient(myId);
+    return offers;
   }
 
 

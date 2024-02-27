@@ -9,4 +9,5 @@ export 'home_screen/home_screen.dart';
 export 'add_offer_screen/add_offer_screen.dart';
 export 'become_employee_secreen/become_employee_secreen.dart';
 export 'offer_interests_secreen/offer_interests_screen.dart';
+export 'voir_employee_screen/voir_employee_screen.dart';
 

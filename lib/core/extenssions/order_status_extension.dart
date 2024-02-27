@@ -7,6 +7,7 @@ extension OrderStatusExtension on String{
       case 'active':return OrderStatus.active;
       case 'finished':return OrderStatus.finished;
       case 'pending':return OrderStatus.pending;
+      case 'stopped':return OrderStatus.stopped;
       default:throw Exception('unknown type!!');
     }
   }
@@ -18,6 +19,7 @@ extension OrderStatusStringExtension on OrderStatus{
   String get orderStatusString{
     switch(this){
       case OrderStatus.active:return 'active';
+      case OrderStatus.stopped:return 'stopped';
       case OrderStatus.finished:return 'finished';
       case OrderStatus.pending:return 'pending';
       default:throw Exception('unknown type!!');

@@ -4,6 +4,7 @@
 
 
 
+import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/extenssions/order_status_extension.dart';
 import 'package:builmeet/core/extenssions/pricing_types_extension.dart';
 import 'package:builmeet/data/data_providers/firebase/models/interest_model.dart';
@@ -120,7 +121,7 @@ class OfferModel{
     );
   }
 
-  OfferModel copyWith({int? interestsCount,InterestModel? interestModel,UserModel? employee,UserModel? creator}){
+  OfferModel copyWith({int? interestsCount,String? orderStatus,InterestModel? interestModel,UserModel? employee,UserModel? creator}){
     return OfferModel(
       employee: employee ?? this.employee,
       interestsCount: interestsCount ?? this.interestsCount,
@@ -132,7 +133,7 @@ class OfferModel{
       dateFin: dateFin,
       dateDebut: dateDebut,
       creator: creator ?? this.creator,
-      orderStatus: orderStatus,
+      orderStatus: orderStatus ?? this.orderStatus,
       pricingType: pricingType,
       dateCreation: dateCreation,
       offerId: offerId,
@@ -143,6 +144,12 @@ class OfferModel{
   Map<String,dynamic> jsonForNotInterested(){
     return {
       'offerId':offerId
+    };
+  }
+  Map<String,dynamic> jsonForAcceptOrder(){
+    return {
+      'employeeId':employee?.uid,
+      'orderStatus':orderStatus
     };
   }
 

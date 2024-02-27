@@ -121,6 +121,27 @@ class RepositoryIml extends Repository{
     return interstsEntity;
   }
 
+  @override
+  Future<InterestEntity> acceptInterest(InterestEntity interestEntity) async{
+    InterestModel interestModel=InterestModel.toInterestModel(interestEntity);
+    InterestModel interestModelRes=await firebaseData.acceptInterest(interestModel);
+    return interestModelRes.toInterestEntity();
+  }
+
+  @override
+  Future<InterestEntity> refuseInterest(InterestEntity interestEntity) async{
+    InterestModel interestModel=InterestModel.toInterestModel(interestEntity);
+    InterestModel interestModelRes=await firebaseData.refuseInterest(interestModel);
+    return interestModelRes.toInterestEntity();
+  }
+
+  @override
+  Future<List<OfferEntity>> getAllOffersForClient() async{
+    List<OfferModel> offerModels=await firebaseData.getAllOffersForClients();
+    List<OfferEntity> offerEntities=offerModels.map((offer) => offer.toOfferEntity()).toList();
+    return offerEntities;
+  }
+
 
 
 

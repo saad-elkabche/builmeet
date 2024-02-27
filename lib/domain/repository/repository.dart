@@ -31,6 +31,13 @@ abstract class Repository{
 
   Future<List<InterestEntity>> getInterests(OfferEntity offerEntity);
 
+  Future<InterestEntity> acceptInterest(InterestEntity interestEntity);
+
+  Future<InterestEntity> refuseInterest(InterestEntity interestEntity);
+
+
+  Future<List<OfferEntity>> getAllOffersForClient();
+
 
 
 }
