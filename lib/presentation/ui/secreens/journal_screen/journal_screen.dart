@@ -2,13 +2,20 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
+import 'package:builmeet/core/utils/show_dialogue_infos.dart';
+import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
-import 'package:builmeet/presentation/blocs/journal_bloc/journal_bloc.dart';
+import 'package:builmeet/presentation/blocs/journal_bloc/journal_bloc.dart' ;
+import 'package:builmeet/presentation/blocs/main_screen_bloc/main_screen_bloc.dart' as MSB;
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
+import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
+import 'package:builmeet/presentation/ui/components/refresh_widget.dart';
 import 'package:builmeet/presentation/ui/secreens/journal_screen/components/journal_offer_client.dart';
+import 'package:builmeet/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -42,6 +49,9 @@ class _JournalScreenState extends State<JournalScreen> {
   void initState() {
     super.initState();
     _fetchData();
+
+    MSB.MainScreenBloc mainSecreenBloc=BlocProvider.of<MSB.MainScreenBloc>(context);
+    BlocProvider.of<JournalBloc>(context).add(ListeneToMainSecreenBloc(mainSecreenBloc));
   }
 
   @override
@@ -60,28 +70,38 @@ class _JournalScreenState extends State<JournalScreen> {
       ),
       body: BlocBuilder<JournalBloc, JournalState>(
         builder: (context, state) {
-          return Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 55,
-                decoration: const BoxDecoration(
-                  color: AppColors.scaffoldColor,
+          return RefreshWidget(
+            refresh: ()async{
+              _fetchData();
+              await Future.delayed(const Duration(seconds: 2));
+            },
+            child: Column(
+              children: [
+                BlocListener<JournalBloc,JournalState>(
+                    listener: _listener,
+                  child: const SizedBox(),
                 ),
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  children: [
-                    item('Actif', 0),
-                    item('Terminé', 1),
-                    if(state.appMode!=UserTypes.client)
-                    item('Autre',2),
-                  ],
+                Container(
+                  width: double.infinity,
+                  height: 55,
+                  decoration: const BoxDecoration(
+                    color: AppColors.scaffoldColor,
+                  ),
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      item('Actif', 0),
+                      item('Terminé', 1),
+                      if(state.appMode!=UserTypes.client)
+                      item('Autre',2),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                  child: mainBody(state)
-              )
-            ],
+                Expanded(
+                    child: mainBody(state)
+                )
+              ],
+            ),
           );
         },
       ),
@@ -154,14 +174,23 @@ class _JournalScreenState extends State<JournalScreen> {
       if (currentTab == 0) {
         List<OfferEntity> offers=state.getActifOffersForClient();
         return ListView(
-          children: List.generate(offers.length, (index) =>
-              JournalOfferClient(offerEntity: offers.elementAt(index))
-          ),
+          children:[
+            ... List.generate(offers.length, (index) =>
+                JournalOfferClient(offerEntity: offers.elementAt(index),onVoir: _onVoirOffer,onTermine: _onTermine,)
+            ),
+            const SizedBox(height: 75,)
+          ]
         );
-      } else if (currentTab == 1) {
-
-      } else {
-
+      } else{
+        List<OfferEntity> offers=state.getFinishedOffersForClient();
+        return ListView(
+          children: [
+            ... List.generate(offers.length, (index) =>
+                JournalOfferClient(offerEntity: offers.elementAt(index),onVoir: _onVoirOffer,)
+            ),
+            const SizedBox(height: 75,)
+          ],
+        );
       }
     } else {
       if (currentTab == 0) {
@@ -173,6 +202,33 @@ class _JournalScreenState extends State<JournalScreen> {
       }
     }
     return const SizedBox();
+  }
+
+  void _onVoirOffer(OfferEntity offer) {
+    JournalBloc journalBloc= BlocProvider.of<JournalBloc>(context);
+    journalBloc.add(ClientVoirOffer(offer));
+    GoRouter.of(context).push(Routes.voirOffer,extra: journalBloc);
+  }
+
+  void _onTermine(OfferEntity offer) {
+    BlocProvider.of<JournalBloc>(context).add(ClientFinishOffer(offer));
+    //print('termine');
+  }
+
+  void _listener(BuildContext context, JournalState state) async{
+    if(state.operationStatus==AppStatus.loading){
+      showProgressBar(context);
+    }else if(state.operationStatus==AppStatus.error){
+      hideDialogue(context);
+      showInfoDialogue(MessageUi('Error', AppStatus.error, 'Okay'), context, (){hideDialogue(context);});
+    }else if(state.operationStatus==AppStatus.success){
+      hideDialogue(context);
+      if(state.currentOperation==Operations.finishOffer){
+        await GoRouter.of(context).push(Routes.ratingScreen,extra: state.operationOnOffer);
+        BlocProvider.of<JournalBloc>(context).add(FetchData());
+      }
+
+    }
   }
 }
 

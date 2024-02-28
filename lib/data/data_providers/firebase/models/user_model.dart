@@ -92,13 +92,15 @@ class UserModel{
   UserModel copyWith({
     String? profilePicUrl,
     String? documentUrl,
-    String? uid
+    String? uid,
+    int? nbRates,
+    double? rate
   }){
     return UserModel(
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
       documentUrl: documentUrl ?? this.documentUrl,
       nomComplet: nomComplet,
-      nbRates: nbRates,
+      nbRates: nbRates ?? this.nbRates,
       metiers: metiers,
       imgProfile: imgProfile,
       document: document,
@@ -107,7 +109,7 @@ class UserModel{
       adressEmail: adressEmail,
       address: address,
       type: type,
-      rate: rate,
+      rate: rate ?? this.rate,
       password: password,
       uid: uid ?? this.uid,
     );
@@ -176,6 +178,13 @@ class UserModel{
       'description':description,
       'type':type,
       'metiers':metiers,
+    };
+  }
+
+  Map<String,dynamic> jsonForUpdatingRate(){
+    return {
+      'rate':rate,
+      'nbRates':nbRates,
     };
   }
 

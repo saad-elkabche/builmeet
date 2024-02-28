@@ -142,6 +142,27 @@ class RepositoryIml extends Repository{
     return offerEntities;
   }
 
+  @override
+  Future<void> clientRateOffer(OfferEntity offerEntity) async{
+    OfferModel offerModel=OfferModel.toOfferModel(offerEntity);
+   await firebaseData.clientRateOffer(offerModel);
+  }
+
+  @override
+  Future<void> employeeRateOffer(OfferEntity offerEntity)async {
+    OfferModel offerModel=OfferModel.toOfferModel(offerEntity);
+    await firebaseData.employeeRateOffer(offerModel);
+  }
+
+  @override
+  Future<OfferEntity> finishOffer(OfferEntity offerEntity) async{
+    OfferModel offerModel=OfferModel.toOfferModel(offerEntity);
+    OfferModel offerModelRes=await firebaseData.finishOffer(offerModel);
+    return offerModelRes.toOfferEntity();
+  }
+
+
+
 
 
 

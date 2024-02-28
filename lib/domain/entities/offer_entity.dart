@@ -22,6 +22,8 @@ class OfferEntity {
   UserEntity? employee;
   InterestEntity? interestEntity;
   int? countInterests;
+  int? clientRate;
+  int? employeeRate;
 
   OfferEntity({
     this.offerId,
@@ -38,13 +40,15 @@ class OfferEntity {
     this.creator,
     this.employee,
     this.interestEntity,
+    this.clientRate,
+    this.employeeRate,
     this.countInterests});
 
    set setInterest(InterestEntity interestEntity){
     this.interestEntity=interestEntity;
   }
 
-  OfferEntity copyWith({InterestEntity? interestEntity,UserEntity? employee}){
+  OfferEntity copyWith({InterestEntity? interestEntity,int? clientRate,int? employeeRate,UserEntity? employee}){
     return OfferEntity(
     offerId: this.offerId,
     metier: this.metier,
@@ -60,7 +64,9 @@ class OfferEntity {
     creator: this.creator,
     employee:employee ?? this.employee,
     interestEntity:interestEntity ?? this.interestEntity,
-    countInterests: this.countInterests
+    countInterests: this.countInterests,
+    clientRate: clientRate ?? this.clientRate,
+    employeeRate: employeeRate ?? this.employeeRate
     );
   }
 

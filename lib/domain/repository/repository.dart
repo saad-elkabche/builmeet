@@ -39,5 +39,11 @@ abstract class Repository{
   Future<List<OfferEntity>> getAllOffersForClient();
 
 
+  Future<OfferEntity> finishOffer(OfferEntity offerEntity);
+  Future<void> clientRateOffer(OfferEntity offerEntity);
+  Future<void> employeeRateOffer(OfferEntity offerEntity);
+
+
+
 
 }

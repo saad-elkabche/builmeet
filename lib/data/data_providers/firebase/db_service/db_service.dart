@@ -1,8 +1,8 @@
 
 
 
-import 'dart:io';
-import 'dart:ui';
+
+
 
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/extenssions/interests_status_extension.dart';
@@ -12,7 +12,7 @@ import 'package:builmeet/data/data_providers/firebase/models/offer_model.dart';
 import 'package:builmeet/data/data_providers/firebase/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+
 
 
 class DBService{
@@ -202,7 +202,12 @@ class DBService{
             (value) async{
           OfferModel offerModel=OfferModel.fromJson(value.data()!, value.id);
           UserModel? creator=await getUser(value.data()!['creatorId']);
-          offerModel=offerModel.copyWith(creator: creator);
+          UserModel? employee;
+          if(value.data()!['employeeId']!=null){
+             employee=await getUser(value.data()!['employeeId']);
+          }
+
+          offerModel=offerModel.copyWith(creator: creator,employee: employee);
           return offerModel;
         }
     );
@@ -377,8 +382,75 @@ class DBService{
   }
 
 
+  Future<OfferModel> finishOffer(OfferModel offerModel)async{
+    offerModel=offerModel.copyWith(orderStatus: OrderStatus.finished.orderStatusString);
 
+    await firebaseFirestore.collection(offersCollectionName)
+        .doc(offerModel.offerId)
+        .get()
+        .then(
+            (value) async{
+              await value.reference.update(offerModel.jsonForUpdateStatus());
+          }
+    );
 
+    OfferModel offerModelRes =await getOffer(offerModel.offerId!);
+
+    print('===================Offer finish===============');
+    print('===================employee===============${offerModel.employee.runtimeType}');
+    print('===================creator===============${offerModel.creator.runtimeType}');
+    return offerModelRes;
+  }
+
+  Future<void> clientRateOffer(OfferModel offerModel)async{
+    double newRate=(offerModel.clientRate!).toDouble();
+    String employeeId=offerModel.employee!.uid!;
+    await Future.wait(
+      [
+        rateOffer(offerModel),
+        rateUser(employeeId, newRate)
+      ]
+    );
+  }
+
+  Future<void> rateOffer(OfferModel offerModel)async{
+    await firebaseFirestore.collection(offersCollectionName)
+        .doc(offerModel.offerId)
+        .get()
+        .then(
+            (value)async{
+          await value.reference.update(offerModel.jsonForUpdateRates());
+        }
+    );
+  }
+  Future<void> rateUser(String uid,double newRate)async{
+    UserModel userModel=await getUser(uid);
+
+    newRate+=userModel.rate!;
+    int nbRates=userModel.nbRates!+1;
+
+    userModel=userModel.copyWith(nbRates: nbRates,rate: newRate);
+    await firebaseFirestore.collection(userCollectionName)
+    .doc(uid)
+    .get()
+    .then(
+            (value)async {
+              await value.reference.update(userModel.jsonForUpdatingRate());
+            }
+    );
+  }
+
+  Future<void> employeeRateOffer(OfferModel offerModel)async{
+    double newRate=(offerModel.employeeRate)!.toDouble();
+    String creatorUid=offerModel.creator!.uid!;
+    await Future.wait(
+        [
+          rateOffer(offerModel),
+          rateUser(creatorUid, newRate)
+        ]
+    );
+
+  }
 
 
 }

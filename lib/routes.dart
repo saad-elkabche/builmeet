@@ -4,8 +4,11 @@
 import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
+import 'package:builmeet/presentation/blocs/journal_bloc/journal_bloc.dart';
+import 'package:builmeet/presentation/ui/secreens/rating_screen/rating_screen.dart';
 import 'package:builmeet/presentation/ui/secreens/edit_employee_infos_secreen/edit_employee_infos_secreen.dart';
 import 'package:builmeet/presentation/ui/secreens/secreens.dart';
+import 'package:builmeet/presentation/ui/secreens/voir_offer_screen/voir_offer_screen.dart';
 import 'package:builmeet/test_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +29,8 @@ class Routes{
   static const String editEmployeeInfos='/employeeEdit';
   static const String offerInterests='/offerInterests';
   static const String voirInterest='/voirInterest';
+  static const String ratingScreen='/ratingScreen';
+  static const String voirOffer='/voirOffer';
 
   GlobalKey<NavigatorState> parentKey=GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> childKey=GlobalKey<NavigatorState>();
@@ -155,6 +160,34 @@ class Routes{
               InterestEntity interest=state.extra as InterestEntity;
               return NoTransitionPage(
                   child:VoirEmployeeScreen.page(interestEntity: interest)
+              );
+            }
+        ),
+        GoRoute(
+            path: ratingScreen,
+            redirect: (context,state){
+              if(state.extra is! OfferEntity){
+                return journal;
+              }
+            },
+            pageBuilder: (context,state){
+              OfferEntity offer=state.extra as OfferEntity;
+              return NoTransitionPage(
+                  child:RatingScreeen.page(offerEntity:offer )
+              );
+            }
+        ),
+        GoRoute(
+            path: voirOffer,
+            redirect: (context,state){
+              if(state.extra is! JournalBloc){
+                return journal;
+              }
+            },
+            pageBuilder: (context,state){
+              JournalBloc journalBloc=state.extra as JournalBloc;
+              return NoTransitionPage(
+                  child:VoirOfferScreen.page(journalBloc:journalBloc )
               );
             }
         )

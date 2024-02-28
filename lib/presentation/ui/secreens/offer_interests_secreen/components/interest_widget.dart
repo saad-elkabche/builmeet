@@ -53,16 +53,23 @@ class InterestWidget extends StatelessWidget {
                     borderColor: AppColors.primaryColor,)
               ),
               Expanded(
-                  child:MyCustomButton(name: 'Voir',
-                    color: Colors.white,
-                    textColor: AppColors.primaryColor,
-                    hasBorder: true,
-                    horizontalMargin: 3,
-                    fontSize: 15,
-                    height: 40,
-                    borderRadius: 20,
-                    onClick: ()=>onVoir?.call(interesEntity),
-                    borderColor: AppColors.primaryColor,
+                  child:Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 160
+                      ),
+                      child: MyCustomButton(name: 'Voir',
+                        color: Colors.white,
+                        textColor: AppColors.primaryColor,
+                        hasBorder: true,
+                        horizontalMargin: 3,
+                        fontSize: 15,
+                        height: 40,
+                        borderRadius: 20,
+                        onClick: ()=>onVoir?.call(interesEntity),
+                        borderColor: AppColors.primaryColor,
+                      ),
+                    ),
                   )
               ),
               if(interesEntity.interestStatus==InterestsStatus.pending)

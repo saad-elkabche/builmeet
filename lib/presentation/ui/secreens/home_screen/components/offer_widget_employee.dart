@@ -146,7 +146,7 @@ class OfferWidgetEmployee extends StatelessWidget {
         children: [
           MyCustomButton(name: 'Pas interesse',
             height: 40,
-            width: 160,
+            width: 140,
             color: Colors.white,
             borderRadius: 20,
             horizontalMargin: 0,

@@ -28,6 +28,8 @@ class OfferModel{
   UserModel? employee;
   InterestModel? myInterest;
   int? interestsCount;
+  int? clientRate;
+  int? employeeRate;
 
 
   OfferModel({
@@ -45,8 +47,10 @@ class OfferModel{
       this.creator,
       this.employee,
       this.interestsCount,
-      this.myInterest
-      });
+      this.myInterest,
+      this.clientRate,
+      this.employeeRate
+  });
 
 
   factory OfferModel.fromJson(Map<String,dynamic> json,String id){
@@ -62,6 +66,8 @@ class OfferModel{
       dateFin:(json['dateFin'] as Timestamp).toDate(),
       nbHourPerDay: json['nbHoursPerDay'],
       orderStatus: json['orderStatus'],
+      clientRate: json['clientRate'],
+      employeeRate: json['employeeRate'],
     );
   }
 
@@ -79,6 +85,8 @@ class OfferModel{
       'orderStatus':orderStatus,
       'creatorId':creator?.uid,
       'employeeId':employee?.uid,
+      'clientRate':clientRate,
+      'employeeRate':employeeRate,
     };
   }
 
@@ -96,7 +104,9 @@ class OfferModel{
       creator:offerEntity.creator!=null?UserModel.toUserModel(offerEntity.creator!):null,
       employee: offerEntity.employee!=null?UserModel.toUserModel(offerEntity.employee!):null,
       orderStatus: offerEntity.orderStatus?.orderStatusString,
-      pricingType: offerEntity.pricingType?.pricingTypesString
+      pricingType: offerEntity.pricingType?.pricingTypesString,
+      employeeRate: offerEntity.employeeRate,
+      clientRate: offerEntity.clientRate
     );
 
   }
@@ -117,6 +127,8 @@ class OfferModel{
       address: address,
       description: description,
       countInterests: interestsCount,
+      clientRate: clientRate,
+      employeeRate: employeeRate,
       interestEntity: myInterest?.toInterestEntity()
     );
   }
@@ -137,8 +149,15 @@ class OfferModel{
       pricingType: pricingType,
       dateCreation: dateCreation,
       offerId: offerId,
+      employeeRate: this.employeeRate,
+      clientRate: this.clientRate,
       myInterest: interestModel ?? myInterest
     );
+  }
+  Map<String,dynamic> jsonForUpdateStatus(){
+    return {
+      'orderStatus':orderStatus,
+    };
   }
 
   Map<String,dynamic> jsonForNotInterested(){
@@ -152,5 +171,16 @@ class OfferModel{
       'orderStatus':orderStatus
     };
   }
+
+
+  Map<String,dynamic> jsonForUpdateRates(){
+    return {
+      'clientRate':clientRate,
+      'employeeRate':employeeRate,
+    };
+  }
+
+
+
 
 }
