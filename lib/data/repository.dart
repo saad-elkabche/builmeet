@@ -161,6 +161,19 @@ class RepositoryIml extends Repository{
     return offerModelRes.toOfferEntity();
   }
 
+  @override
+  Future<List<InterestEntity>> getAllInterestsFormEmployee() async{
+    List<InterestModel> interests=await firebaseData.getAllInterestForEmployee();
+    List<InterestEntity> interestsRes=List.from(interests.map((item) => item.toInterestEntity()));
+    return interestsRes;
+  }
+
+  @override
+  Future<void> clientStopOffer(OfferEntity offer) async{
+    OfferModel offerModel=OfferModel.toOfferModel(offer);
+    await firebaseData.clientStopOffer(offerModel);
+  }
+
 
 
 

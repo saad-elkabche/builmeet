@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
@@ -27,7 +28,7 @@ class JournalOfferClient extends StatelessWidget {
       child: Container(
         width: width*0.9,
         margin: const EdgeInsets.symmetric(vertical: 15),
-        padding:const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+        padding:const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -37,7 +38,7 @@ class JournalOfferClient extends StatelessWidget {
         child:Column(
           children: [
             infos(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 10,),
             getActions()
           ],
         ) ,
@@ -66,7 +67,7 @@ class JournalOfferClient extends StatelessWidget {
             Row(
               children: [
                 const Icon(Icons.star,color: Colors.amber,),
-                Text('${offerEntity.employee?.rate ?? 0}',style: GoogleFonts.inter(color: Colors.amber),),
+                Text(rateCalculator(offerEntity.employee!.rate!,offerEntity.employee!.nbRates!),style: GoogleFonts.inter(color: Colors.amber),),
                 Text('(${offerEntity.employee?.nbRates ?? 0})',style: GoogleFonts.inter(color: Colors.grey),)
               ],
             )
@@ -77,10 +78,11 @@ class JournalOfferClient extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(offerEntity.employee?.nomComplet ?? '',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5,),
             Text('(${offerEntity.employee?.metiers?.elementAt(0) ?? ''})',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w500)),
-
-            Text('${offerEntity.price ?? ''}€',
+            const SizedBox(height: 5,),
+            Text('${(offerEntity.price! * 1.1) ?? ''}€',
                   style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
           ],
         )

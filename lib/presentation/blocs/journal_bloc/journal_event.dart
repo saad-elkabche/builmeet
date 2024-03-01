@@ -21,11 +21,6 @@ class ClientFinishOffer extends JournalEvent{
   ClientFinishOffer(this.offerEntity);
 }
 
-class ClientVoirOffer extends JournalEvent{
-  OfferEntity offerEntity;
-
-  ClientVoirOffer(this.offerEntity);
-}
 
 
 

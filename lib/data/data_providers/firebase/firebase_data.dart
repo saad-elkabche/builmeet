@@ -50,6 +50,12 @@ abstract class FirebaseData{
 
 
 
+  Future<List<InterestModel>> getAllInterestForEmployee();
+
+  Future<void> clientStopOffer(OfferModel offerModel);
+
+
+
 }
 
 
@@ -205,6 +211,19 @@ class FirebaseDataIml extends FirebaseData{
     OfferModel offerModelRes =await dbService.finishOffer(offerModel);
     return offerModelRes;
   }
+
+  @override
+  Future<List<InterestModel>> getAllInterestForEmployee() async{
+    String employeeId=authService.getCurrentUser().uid;
+    List<InterestModel> interests=await dbService.getAllInterestsForEmployee(employeeId);
+    return interests;
+  }
+
+  @override
+  Future<void> clientStopOffer(OfferModel offerModel) async{
+    await dbService.clientStopOffer(offerModel);
+  }
+
 
 
 

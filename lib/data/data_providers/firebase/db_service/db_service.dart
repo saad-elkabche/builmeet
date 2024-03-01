@@ -118,8 +118,38 @@ class DBService{
              Filter('creatorId',isNotEqualTo: employeeId),
              Filter('orderStatus',isEqualTo:OrderStatus.pending.orderStatusString)
           )*/
+
+  Future<List<String>> getOffersEmployeeNotInterestedWith(String employeeId)async{
+    List<String> offerIds=await firebaseFirestore.collection(userCollectionName)
+        .doc(employeeId)
+        .get()
+        .then(
+            (value) async{
+              List<String> offerIds=await value.reference
+                  .collection(notInterstedCollectionName)
+                  .get()
+                  .then(
+                  (value){
+                    if(value.docs.isNotEmpty){
+                      List<String> ids=[];
+                      for(var doc in value.docs){
+                        String offerId=doc.data()['offerId'];
+                        ids.add(offerId);
+                      }
+                      return ids;
+                    }
+                    return [];
+                  }
+              );
+              return offerIds;
+            }
+    );
+    return offerIds;
+  }
   
   Future<List<OfferModel>> getOffersForEmployee(String employeeId)async{
+
+    List<String> offersNotIntersted=await getOffersEmployeeNotInterestedWith(employeeId);
 
     List<OfferModel> offers=await firebaseFirestore.collection(offersCollectionName)
         //.where('creatorId',isNotEqualTo: employeeId)
@@ -132,7 +162,7 @@ class DBService{
           if(value.docs.isNotEmpty){
             List<OfferModel> offers=[];
             for(var doc in value.docs){
-              if(doc.data()['creatorId']!=employeeId){
+              if(doc.data()['creatorId']!=employeeId  && !offersNotIntersted.contains(doc.id) ){
                 OfferModel offerModel=OfferModel.fromJson(doc.data(), doc.id);
                 UserModel? creator=await getUser(doc.data()['creatorId']);
                 InterestModel? myInterest=await getInterset(doc.id, employeeId);
@@ -396,9 +426,7 @@ class DBService{
 
     OfferModel offerModelRes =await getOffer(offerModel.offerId!);
 
-    print('===================Offer finish===============');
-    print('===================employee===============${offerModel.employee.runtimeType}');
-    print('===================creator===============${offerModel.creator.runtimeType}');
+
     return offerModelRes;
   }
 
@@ -448,6 +476,52 @@ class DBService{
           rateOffer(offerModel),
           rateUser(creatorUid, newRate)
         ]
+    );
+
+  }
+
+  Future<List<InterestModel>> getAllInterestsForEmployee(String employeeId)async{
+    List<InterestModel> interests=await firebaseFirestore.collection(interestsCollectionName)
+        .where('idEmployee',isEqualTo: employeeId)
+        .orderBy('dateCreation',descending: true)
+        .get()
+        .then(
+            (value)async{
+
+              if(value.docs.isNotEmpty){
+                List<InterestModel> interests=[];
+                for(var doc in value.docs){
+                  var results=await Future.wait(
+                    [
+                      getOffer(doc.data()['idOffer']),
+                      getUser(doc.data()['idEmployee']),
+                    ]
+                  );
+                  
+                  OfferModel offer=results[0] as OfferModel;
+                  UserModel employee=results[1] as UserModel;
+
+                  InterestModel interestModel=InterestModel.fromJson(doc.data());
+                  interestModel=interestModel.copyWith(offer: offer,user: employee);
+                  interests.add(interestModel);
+                }
+                return interests;
+              }
+              return [];
+            }
+    );
+    return interests;
+  }
+
+  Future<void> clientStopOffer(OfferModel offerModel)async{
+    offerModel=offerModel.copyWith(orderStatus: OrderStatus.stopped.orderStatusString);
+    await firebaseFirestore.collection(offersCollectionName)
+    .doc(offerModel.offerId)
+    .get()
+    .then(
+            (value)async{
+              await value.reference.update(offerModel.jsonForUpdateStatus());
+            }
     );
 
   }

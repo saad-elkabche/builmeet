@@ -27,7 +27,6 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
     on<FetchData>(_fetchData);
     on<ListeneToMainSecreenBloc>(_listenToMainScreenBloc);
     on<ClientFinishOffer>(_finishOffer);
-    on<ClientVoirOffer>(_clientVoirOffer);
   }
 
   FutureOr<void> _fetchData(FetchData event, Emitter<JournalState> emit) async{
@@ -38,10 +37,12 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
         emit(state.copyWith(
             fetchingDataStatus: AppStatus.success, offers: offers));
       }else{
-
+        List<InterestEntity> interest=await repository.getAllInterestsFormEmployee();
+        emit(state.copyWith(interests: interest,fetchingDataStatus: AppStatus.success));
       }
     }catch(ex){
       emit(state.copyWith(fetchingDataStatus: AppStatus.error));
+      rethrow;
     }
   }
 
@@ -80,15 +81,11 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
           operationStatus: AppStatus.success,
           operationOnOffer: offerEntity,
           currentOperation: Operations.finishOffer));
-
-      add(FetchData());
     }catch(ex){
       emit(state.copyWith(operationStatus: AppStatus.error));
       rethrow;
     }
   }
 
-  FutureOr<void> _clientVoirOffer(ClientVoirOffer event, Emitter<JournalState> emit) {
-    emit(state.copyWith(operationOnOffer: event.offerEntity));
-  }
+
 }

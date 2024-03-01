@@ -29,3 +29,9 @@ class EmployeeNotIntersted extends HomeEvent{
   int index;
   EmployeeNotIntersted({required this.offerEntity,required this.index});
 }
+
+class ClientStopOffer extends HomeEvent{
+  OfferEntity offer;
+
+  ClientStopOffer(this.offer);
+}

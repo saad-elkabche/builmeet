@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/total_mission_calculator.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
@@ -83,6 +84,19 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
 
       UserEntity creator=await repository.getCurrentUser();
 
+      double price;
+
+      if(event.isByHour){
+        price=calculTotalMission(
+            dateBegin: event.dateBegin,
+            dateEnd: event.dateEnd,
+            nbHour: int.parse(event.nbHour),
+            hourPrice:double.parse(event.price) );
+      }else{
+        price=double.parse(event.price);
+      }
+
+
       OfferEntity offerEntity=OfferEntity(
         pricingType: event.isByHour?PricingTypes.hourly:PricingTypes.total,
         orderStatus: OrderStatus.pending,
@@ -90,7 +104,7 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
         dateDebut: event.dateBegin,
         dateFin: event.dateEnd,
         nbHourPerDay: int.parse(event.nbHour),
-        price: double.parse(event.price),
+        price: price,
         metier: event.metier,
         address: event.address,
         description: event.description

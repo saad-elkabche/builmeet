@@ -8,6 +8,7 @@ import 'package:builmeet/presentation/blocs/journal_bloc/journal_bloc.dart';
 import 'package:builmeet/presentation/ui/secreens/rating_screen/rating_screen.dart';
 import 'package:builmeet/presentation/ui/secreens/edit_employee_infos_secreen/edit_employee_infos_secreen.dart';
 import 'package:builmeet/presentation/ui/secreens/secreens.dart';
+import 'package:builmeet/presentation/ui/secreens/voir_offer_for_employee/voir_offer_for_employee.dart';
 import 'package:builmeet/presentation/ui/secreens/voir_offer_screen/voir_offer_screen.dart';
 import 'package:builmeet/test_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,6 +32,7 @@ class Routes{
   static const String voirInterest='/voirInterest';
   static const String ratingScreen='/ratingScreen';
   static const String voirOffer='/voirOffer';
+  static const String voirOfferForEmployee='/voirOfferForEmployee';
 
   GlobalKey<NavigatorState> parentKey=GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> childKey=GlobalKey<NavigatorState>();
@@ -180,17 +182,33 @@ class Routes{
         GoRoute(
             path: voirOffer,
             redirect: (context,state){
-              if(state.extra is! JournalBloc){
+              if(state.extra is! OfferEntity){
                 return journal;
               }
             },
             pageBuilder: (context,state){
-              JournalBloc journalBloc=state.extra as JournalBloc;
+              OfferEntity offer=state.extra as OfferEntity;
               return NoTransitionPage(
-                  child:VoirOfferScreen.page(journalBloc:journalBloc )
+                  child:VoirOfferScreen.page(offer: offer)
               );
             }
-        )
+        ),
+
+        GoRoute(
+            path: voirOfferForEmployee,
+            redirect: (context,state){
+              if(state.extra is! InterestEntity){
+                return journal;
+              }
+            },
+            pageBuilder: (context,state){
+              InterestEntity interest=state.extra as InterestEntity;
+              return NoTransitionPage(
+                  child:VoirOfferEmployee(interestEntity: interest,)
+              );
+            }
+        ),
+
 
 
       ]

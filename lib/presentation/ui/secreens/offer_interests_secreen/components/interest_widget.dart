@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
@@ -113,7 +114,7 @@ class InterestWidget extends StatelessWidget {
             Row(
               children: [
                 const Icon(Icons.star,color: Colors.amber,),
-                Text('${interesEntity.user!.rate}',style: GoogleFonts.inter(color: Colors.amber),)
+                Text(rateCalculator(interesEntity.user?.rate ?? 0,interesEntity.user!.nbRates!),style: GoogleFonts.inter(color: Colors.amber),)
               ],
             )
           ],
@@ -126,7 +127,7 @@ class InterestWidget extends StatelessWidget {
            Text('(${interesEntity.user!.metiers?.elementAt(0) ?? ''})',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w500)),
             if(interesEntity.interestPrice!=null)
-            Text('${interesEntity.interestPrice ?? ''}€',
+            Text('${(interesEntity.interestPrice! * 1.1) ?? ''}€',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
           ],
         )

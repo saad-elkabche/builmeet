@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   void onClientStop(OfferEntity offer) {
-    print('client stop');
+   BlocProvider.of<HomeBloc>(context).add(ClientStopOffer(offer));
   }
 
   void onClientLesInteresse(OfferEntity offer) {

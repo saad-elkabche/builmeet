@@ -62,6 +62,27 @@ class JournalState {
     return offers;
   }
 
+  List<InterestEntity> getInterestsActifOfferFormEmployee(){
+    List<InterestEntity> interests=interestsForEmployee!.where((element){
+      return element.interestStatus==InterestsStatus.accepted && element.offer!.orderStatus==OrderStatus.active;
+    }).toList();
+    return interests;
+  }
+
+  List<InterestEntity> getInterestsFinishedForEmployee(){
+    List<InterestEntity> interests=interestsForEmployee!.where((element){
+      return element.interestStatus==InterestsStatus.accepted && element.offer!.orderStatus==OrderStatus.finished;
+    }).toList();
+    return interests;
+  }
+
+  List<InterestEntity> getOtherOffersForEmployee(){
+    List<InterestEntity> interests=interestsForEmployee!.where((element){
+      return element.interestStatus!=InterestsStatus.accepted;
+    }).toList();
+    return interests;
+  }
+
 }
 
 

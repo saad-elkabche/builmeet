@@ -2,6 +2,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
@@ -96,7 +97,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
   }
   Widget profile(VoirEmployeeState state){
    UserEntity userEntity=state.interestEntity!.user!;
-    String rate=(state.interestEntity?.user?.rate ?? 0.0).toString();
+    double rate=(state.interestEntity?.user?.rate ?? 0.0);
     String? imgProfile=state.interestEntity?.user?.profilePicUrl;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -114,7 +115,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.star,color: Colors.amber,),
-            Text(rate,style: GoogleFonts.inter(color: Colors.amber,fontWeight: FontWeight.bold),),
+            Text(rateCalculator(rate, userEntity.nbRates!),style: GoogleFonts.inter(color: Colors.amber,fontWeight: FontWeight.bold),),
             Text('(${userEntity.nbRates})',style: GoogleFonts.inter(color: Colors.grey,fontWeight: FontWeight.bold),)
           ],
         ),

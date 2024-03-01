@@ -58,7 +58,7 @@ class OfferWidgetClient extends StatelessWidget {
               mainAxisAlignment:MainAxisAlignment.spaceBetween,
               children: [
                 Text('Remunération',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
-                Text('${calculePrice().toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
+                Text('${(offerEntity!.price! * 1.1).toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
               ],
             ),
             SizedBox(height: 25,),
@@ -91,20 +91,7 @@ class OfferWidgetClient extends StatelessWidget {
 
 
 
-  double calculePrice(){
-    if(offerEntity!.pricingType==PricingTypes.total){
-      return offerEntity!.price!*calculCommision(10);
-    }else{
-      double total=calculTotalMission(
-          dateBegin: offerEntity!.dateDebut!,
-          dateEnd: offerEntity!.dateFin!,
-          nbHour: offerEntity!.nbHourPerDay!,
-          hourPrice: offerEntity!.price!,
-          userType: UserTypes.client,
-          commision: 10);
-      return total;
-    }
-  }
+
 
 
   String dateFormatter(DateTime date){

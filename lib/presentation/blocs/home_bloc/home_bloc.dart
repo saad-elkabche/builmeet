@@ -26,6 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ListeneToMainScreen>(_listenToMainSecreenState);
     on<EmployeeInteresser>(_employeeIntersted);
     on<EmployeeNotIntersted>(_employeeNotIntersted);
+    on<ClientStopOffer>(_clientStopOffer);
 
   }
 
@@ -104,4 +105,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
   }
 
+
+  FutureOr<void> _clientStopOffer(ClientStopOffer event, Emitter<HomeState> emit) async{
+    try{
+      emit(state.copyWith(operationStatus: AppStatus.loading));
+      await repository.clientStopOffer(event.offer);
+      emit(state.copyWith(operationStatus: AppStatus.success));
+      add(FetchOffers());
+    }catch(ex){
+      emit(state.copyWith(operationStatus: AppStatus.error));
+    }
+  }
 }

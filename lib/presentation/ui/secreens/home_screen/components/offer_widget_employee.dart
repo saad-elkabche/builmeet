@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/core/services/total_mission_calculator.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
@@ -32,7 +33,7 @@ class OfferWidgetEmployee extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width=MediaQuery.sizeOf(context).width;
-    //double height=MediaQuery.sizeOf(context).height;
+
 
     return Center(
       child: Container(
@@ -67,7 +68,7 @@ class OfferWidgetEmployee extends StatelessWidget {
               mainAxisAlignment:MainAxisAlignment.spaceBetween,
               children: [
                 Text('Remunération',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
-                Text('${calculePrice().toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
+                Text('${offerEntity!.price!.toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
               ],
             ),
             SizedBox(height: 25,),
@@ -104,20 +105,7 @@ class OfferWidgetEmployee extends StatelessWidget {
 
 
 
-  double calculePrice(){
-    if(offerEntity!.pricingType==PricingTypes.total){
-      return offerEntity!.price!;
-    }else{
-      double total=calculTotalMission(
-          dateBegin: offerEntity!.dateDebut!,
-          dateEnd: offerEntity!.dateFin!,
-          nbHour: offerEntity!.nbHourPerDay!,
-          hourPrice: offerEntity!.price!,
-          userType: UserTypes.employee,
-          commision: 10);
-      return total;
-    }
-  }
+
 
 
   String dateFormatter(DateTime date){
@@ -176,7 +164,8 @@ Widget profile(){
     String? imgProfile=offerEntity?.creator?.profilePicUrl;
     ImageProvider<Object> image=(imgProfile!=null?NetworkImage(imgProfile):AssetImage(AppImages.img_person)) as ImageProvider<Object>;
 
-    String rate=(offerEntity?.creator?.rate ?? 0.0).toString();
+    double rate=(offerEntity?.creator?.rate ?? 0.0);
+    int nbRate=offerEntity?.creator?.nbRates ?? 0;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -195,7 +184,7 @@ Widget profile(){
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.star,color: Colors.amber,),
-            Text(rate,style: GoogleFonts.inter(color: Colors.amber,fontWeight: FontWeight.bold),)
+            Text(rateCalculator(rate, nbRate),style: GoogleFonts.inter(color: Colors.amber,fontWeight: FontWeight.bold),)
           ],
         )
       ],

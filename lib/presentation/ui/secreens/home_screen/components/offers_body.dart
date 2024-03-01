@@ -33,7 +33,8 @@ class OffersBody extends StatelessWidget {
     return ListView(
       children: appMode==UserTypes.client
           ?
-      List.generate(
+     [
+       ...List.generate(
           (isLoading ?? false)?3:offers!.length,
            (index) => OfferWidgetClient(
              offerEntity: offers?.elementAt(index),
@@ -41,9 +42,12 @@ class OffersBody extends StatelessWidget {
              onInterestClick: onLesIntersses,
              isloading: isLoading,
            )
-      )
+      ),
+      const SizedBox(height: 75,)
+     ]
           :
-      List.generate((isLoading ?? false)?3:offers!.length,
+      [
+        ...List.generate((isLoading ?? false)?3:offers!.length,
               (index) => OfferWidgetEmployee(
                 index: index,
                 offerEntity: offers?.elementAt(index),
@@ -52,6 +56,8 @@ class OffersBody extends StatelessWidget {
                 onPasInterss: onPasInterss,
               )
       ),
+        const SizedBox(height: 75,)
+      ]
     );
   }
 }

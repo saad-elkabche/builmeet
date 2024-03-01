@@ -4,6 +4,7 @@ import 'package:builmeet/core/dependencies/dependencies.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
+import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/blocs/journal_bloc/journal_bloc.dart' ;
@@ -12,6 +13,7 @@ import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
 import 'package:builmeet/presentation/ui/components/refresh_widget.dart';
 import 'package:builmeet/presentation/ui/secreens/journal_screen/components/journal_offer_client.dart';
+import 'package:builmeet/presentation/ui/secreens/journal_screen/components/journal_offer_employee.dart';
 import 'package:builmeet/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -194,26 +196,50 @@ class _JournalScreenState extends State<JournalScreen> {
       }
     } else {
       if (currentTab == 0) {
-
+        List<InterestEntity> interests=state.getInterestsActifOfferFormEmployee();
+        return ListView(
+          children: [
+            ...List.generate(interests.length,
+                    (index) => JournalOfferEmployee(
+                      interestEntity: interests.elementAt(index),
+                      onRate: _employeeRateOffer,
+                      onVoir:_onVoirOfferForEmployee,)
+            ),
+            const SizedBox(height: 70,)
+          ],
+        );
       } else if (currentTab == 1) {
-
+        List<InterestEntity> interests=state.getInterestsFinishedForEmployee();
+        return ListView(
+          children: [
+            ...List.generate(interests.length,
+                    (index) => JournalOfferEmployee(
+                      interestEntity: interests.elementAt(index),
+                      onRate: _employeeRateOffer,
+                      onVoir: _onVoirOfferForEmployee,)
+            ),
+            const SizedBox(height: 70,)
+          ],
+        );
       } else {
-
+        List<InterestEntity> interests=state.getOtherOffersForEmployee();
+        return ListView(
+          children: [
+            ...List.generate(interests.length,
+                    (index) => JournalOfferEmployee(
+                  interestEntity: interests.elementAt(index),
+                  onVoir: _onVoirOfferForEmployee,)
+            ),
+            const SizedBox(height: 70,)
+          ],
+        );
       }
     }
     return const SizedBox();
   }
 
-  void _onVoirOffer(OfferEntity offer) {
-    JournalBloc journalBloc= BlocProvider.of<JournalBloc>(context);
-    journalBloc.add(ClientVoirOffer(offer));
-    GoRouter.of(context).push(Routes.voirOffer,extra: journalBloc);
-  }
 
-  void _onTermine(OfferEntity offer) {
-    BlocProvider.of<JournalBloc>(context).add(ClientFinishOffer(offer));
-    //print('termine');
-  }
+
 
   void _listener(BuildContext context, JournalState state) async{
     if(state.operationStatus==AppStatus.loading){
@@ -225,10 +251,29 @@ class _JournalScreenState extends State<JournalScreen> {
       hideDialogue(context);
       if(state.currentOperation==Operations.finishOffer){
         await GoRouter.of(context).push(Routes.ratingScreen,extra: state.operationOnOffer);
-        BlocProvider.of<JournalBloc>(context).add(FetchData());
+        _fetchData();
       }
 
     }
+  }
+
+  void _onVoirOffer(OfferEntity offer) async{
+    await GoRouter.of(context).push(Routes.voirOffer,extra: offer);
+    _fetchData();
+  }
+
+  void _onTermine(OfferEntity offer) {
+    BlocProvider.of<JournalBloc>(context).add(ClientFinishOffer(offer));
+    //print('termine');
+  }
+
+  void _onVoirOfferForEmployee(InterestEntity interestEntity) {
+    GoRouter.of(context).push(Routes.voirOfferForEmployee,extra: interestEntity);
+  }
+
+  void _employeeRateOffer(InterestEntity interestEntity) async{
+    await GoRouter.of(context).push(Routes.ratingScreen,extra: interestEntity.offer);
+    _fetchData();
   }
 }
 
