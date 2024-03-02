@@ -2,6 +2,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -55,7 +56,7 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: AppColors.scaffoldColor,
-        title: Text('Details',style: GoogleFonts.inter(color: AppColors.primaryColor,fontSize: 20,fontWeight: FontWeight.bold),),
+        title: Text(getLang(context, "details"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontSize: 20,fontWeight: FontWeight.bold),),
         leading: IconButton(
           onPressed: ()=>Navigator.of(context).pop(),
           icon:const  Icon(Icons.arrow_back_ios_new,color: AppColors.primaryColor,),),
@@ -73,7 +74,7 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
                   ),
                   Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Commande',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
+                      child: Text(getLang(context, "Order"),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
                   const SizedBox(height: 30,),
                   Container(
                     width: width*0.9,
@@ -85,18 +86,18 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        item('Metier requis', state.offerEntity!.metier),
+                        item(getLang(context, "metier_requis"), state.offerEntity!.metier),
                         item('Description', state.offerEntity!.description),
-                        item('Adresse', state.offerEntity!.address),
+                        item(getLang(context, "adress"), state.offerEntity!.address),
                         listTile(
                             const Icon(Icons.calendar_month,color: AppColors.primaryColor,),
-                            'De ${dateFormatter(state.offerEntity!.dateDebut!)} à ${dateFormatter(state.offerEntity!.dateFin!)}'
+                            '${getLang(context, 'de')} ${dateFormatter(state.offerEntity!.dateDebut!)} ${getLang(context, 'a')} ${dateFormatter(state.offerEntity!.dateFin!)}'
                         ),
-                        listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${state.offerEntity!.nbHourPerDay} Heures/jour'),
+                        listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${state.offerEntity!.nbHourPerDay}${getLang(context, "hour_jour")}'),
                         Row(
                           mainAxisAlignment:MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Remunération',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+                            Text(getLang(context, "remuneration"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
                             Text('${(state.offerEntity!.price! * 1.1)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
                           ],
                         ),
@@ -107,7 +108,7 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
                   const SizedBox(height: 20,),
                   Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Prestataire',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
+                      child: Text(getLang(context, "prestataire"),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),)),
               
                   const SizedBox(height: 20,),
                   Container(
@@ -123,8 +124,8 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
                         Align(
                             alignment:Alignment.center,
                             child: profile(state)),
-                        item('Metiers',metiers(state)),
-                        item('Adresse', state.offerEntity!.employee!.address),
+                        item(getLang(context, "metier"),metiers(state)),
+                        item(getLang(context, "adress"), state.offerEntity!.employee!.address),
                         description(state)
 
                       ],
@@ -266,7 +267,7 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
   Widget getAction(VoirOfferState state) {
     if(state.offerEntity!.orderStatus!=OrderStatus.finished){
       return MyCustomButton(
-        name:'Terminer',
+        name:getLang(context, "terminer"),
         color: AppColors.primaryColor,
         width: 150,
         horizontalMargin: 0,

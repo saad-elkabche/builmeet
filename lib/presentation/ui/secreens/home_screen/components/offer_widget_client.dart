@@ -1,8 +1,11 @@
 
 
+
+
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/total_mission_calculator.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
@@ -42,14 +45,14 @@ class OfferWidgetClient extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            info('Metier requis', offerEntity!.metier!),
+            info(getLang(context, "metier_requis"), offerEntity!.metier!),
             info('Description', offerEntity!.description!),
-            info('Adress', offerEntity!.address!),
+            info(getLang(context, "adress"), offerEntity!.address!),
 
 
             listTile(
               const Icon(Icons.calendar_month,color: AppColors.primaryColor,),
-              'De ${dateFormatter(offerEntity!.dateDebut!)} à ${dateFormatter(offerEntity!.dateFin!)}'
+              '${getLang(context, "de")} ${dateFormatter(offerEntity!.dateDebut!)} ${getLang(context, "a")} ${dateFormatter(offerEntity!.dateFin!)}'
             ),
             listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${offerEntity!.nbHourPerDay} Heures/jour'),
 
@@ -57,13 +60,13 @@ class OfferWidgetClient extends StatelessWidget {
             Row(
               mainAxisAlignment:MainAxisAlignment.spaceBetween,
               children: [
-                Text('Remunération',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+                Text(getLang(context, "remuneration"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
                 Text('${(offerEntity!.price! * 1.1).toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
               ],
             ),
             SizedBox(height: 25,),
 
-            getAction(),
+            getAction(context),
 
           ],
 
@@ -80,14 +83,7 @@ class OfferWidgetClient extends StatelessWidget {
     );
   }
 
-  String getStatus(){
-    switch(offerEntity!.orderStatus){
-      case OrderStatus.pending:return "En attend";
-      case OrderStatus.active:return "actife";
-      case OrderStatus.finished:return "complete";
-      default:return '';
-    }
-  }
+
 
 
 
@@ -113,13 +109,13 @@ class OfferWidgetClient extends StatelessWidget {
     );
   }
 
-  Widget getAction() {
+  Widget getAction(BuildContext context) {
     print('==============from presentaion===========${offerEntity?.countInterests}');
     if(offerEntity!.orderStatus==OrderStatus.pending){
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          MyCustomButton(name: 'Arreter',
+          MyCustomButton(name: getLang(context, "stop"),
             height: 40,
             width: 120,
             color: Colors.white,
@@ -130,7 +126,7 @@ class OfferWidgetClient extends StatelessWidget {
             borderColor: AppColors.primaryColor,
             onClick:()=> onStopClick?.call(offerEntity!),
           ),
-          MyCustomButton(name: 'Intéressés(${offerEntity?.countInterests ?? 0})',
+          MyCustomButton(name: '${getLang(context,"interested")}(${offerEntity?.countInterests ?? 0})',
             height: 40,
             width: 160,
             color: AppColors.primaryColor,

@@ -3,6 +3,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -91,7 +92,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       borderColor: AppColors.primaryColor.withOpacity(0.5),
                       activeBorderColor: AppColors.primaryColor,
                       fillColor: Colors.white,
-                      hint: 'Nom Complete',
+                      hint: getLang(context, "nom_complete"),
                       hintColor: Colors.grey,
                       controller: nomComplete,
                       validator: Validator()
@@ -107,7 +108,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       borderColor: AppColors.primaryColor.withOpacity(0.5),
                       activeBorderColor: AppColors.primaryColor,
                       fillColor: Colors.white,
-                      hint: 'Date de naissance',
+                      hint: getLang(context, "date_naissance"),
                       suffix: const Icon(Icons.calendar_month,color: Colors.grey,),
                       hintColor: Colors.grey,
                       onSuffixClick: pickDateNaissance,
@@ -122,7 +123,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       borderColor: AppColors.primaryColor.withOpacity(0.5),
                       activeBorderColor: AppColors.primaryColor,
                       fillColor: Colors.white,
-                      hint: 'Adresse email',
+                      hint: getLang(context, "confirm_mot_pass"),
                       controller: addressEmail,
                       validator: Validator()
                           .required()
@@ -136,7 +137,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       borderColor: AppColors.primaryColor.withOpacity(0.5),
                       activeBorderColor: AppColors.primaryColor,
                       fillColor: Colors.white,
-                      hint: 'Mot de passe',
+                      hint: getLang(context, "mot_pass"),
                       hintColor: Colors.grey,
                       controller: motPass,
                       isPassWord: true,
@@ -157,7 +158,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       activeBorderColor: AppColors.primaryColor,
                       fillColor: Colors.white,
                       hintColor: Colors.grey,
-                      hint: 'Confirmation du mot de passe',
+                      hint: getLang(context, "confirm_mot_pass"),
                       controller: confirmMotPass,
                       isPassWord: true,
                       openEyeIcon: const Icon(Icons.remove_red_eye_rounded,color: AppColors.primaryColor,),
@@ -169,14 +170,14 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       label: ''),
                   const SizedBox(height: 40,),
 
-                  MyCustomButton(name: "S'inscrire",
+                  MyCustomButton(name:getLang(context, "register"),
                     color: AppColors.primaryColor,
                     borderRadius: 25,
                     height: 50,
                     onClick: register,
                     fontSize: 25,),
                   const SizedBox(height: 20,),
-                  MyTextButton(name: 'vous avez déaj un compte', color: AppColors.primaryColor,onclick: navToLogin,),
+                  MyTextButton(name: getLang(context, "you_hav_an_account"), color: AppColors.primaryColor,onclick: navToLogin,),
                   BlocListener<RegisterBloc,RegisterState>(
                       listener: _listernner,
                     child: SizedBox(),
@@ -209,7 +210,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
         lastDate: DateTime(DateTime.now().year-6),
       //currentDate: DateTime.now(),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
-      helpText: 'Date de naissance',
+      helpText: getLang(context, "date_naissance"),
     );
 
     if(selectedDate!=null){
@@ -226,7 +227,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
       showProgressBar(context);
     }else if(state.registerStatus==AppStatus.error){
       hideDialogue(context);
-      showInfoDialogue(MessageUi(state.error ?? 'error', AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
+      showInfoDialogue(MessageUi(getLang(context,state.error ?? 'error'), AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
     }else if(state.registerStatus==AppStatus.success){
       GoRouter goRouter = GoRouter.of(context);
       while(goRouter.canPop()){

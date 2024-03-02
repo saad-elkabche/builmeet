@@ -168,7 +168,8 @@ class OfferModel{
   Map<String,dynamic> jsonForAcceptOrder(){
     return {
       'employeeId':employee?.uid,
-      'orderStatus':orderStatus
+      'orderStatus':orderStatus,
+      'price':price
     };
   }
 

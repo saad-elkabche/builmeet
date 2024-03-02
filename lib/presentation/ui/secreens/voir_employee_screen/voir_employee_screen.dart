@@ -2,6 +2,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -120,7 +121,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
           ],
         ),
         Text(userEntity.nomComplet!,style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
-        Text('(${age(userEntity.dateNaissance!)} ans)',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
+        Text('(${age(userEntity.dateNaissance!)} ${getLang(context,'ans')})',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
 
       ],
     );
@@ -138,7 +139,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('metiers',style: GoogleFonts.inter(fontSize: 17,color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+          Text(getLang(context, "metier"),style: GoogleFonts.inter(fontSize: 17,color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
           ...List.generate(state.interestEntity!.user!.metiers!.length,
                   (index){
                     return Padding(
@@ -158,7 +159,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
       child: Column(
         crossAxisAlignment:CrossAxisAlignment.start ,
         children: [
-          Text('Adresse',style: GoogleFonts.inter(fontSize: 17,color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+          Text(getLang(context, "offer_address"),style: GoogleFonts.inter(fontSize: 17,color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
           Padding(
             padding:const EdgeInsets.only(left: 20,top: 10),
             child: Text(state.interestEntity!.user!.address!,style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w600),),
@@ -213,7 +214,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         MyCustomButton(
-          name: 'Refuser',
+          name: getLang(context, "refuser"),
           fontSize: 18,
           borderRadius: 23,
           width: 150,
@@ -224,7 +225,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
           onClick: _refuserInterest,
           color: AppColors.scaffoldColor,),
         MyCustomButton(
-          name: 'Accepter',
+          name: getLang(context, "accepter"),
           fontSize: 18,
           borderRadius: 23,
           width: 150,

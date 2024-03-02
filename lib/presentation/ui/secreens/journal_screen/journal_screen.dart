@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -64,7 +65,7 @@ class _JournalScreenState extends State<JournalScreen> {
         backgroundColor: AppColors.scaffoldColor,
         centerTitle: true,
         title: Text(
-          'Grérer les commandes',
+          getLang(context, "manage_commands"),
           style: GoogleFonts.inter(color: AppColors.primaryColor,
               fontSize: 23,
               fontWeight: FontWeight.bold),
@@ -92,10 +93,10 @@ class _JournalScreenState extends State<JournalScreen> {
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     children: [
-                      item('Actif', 0),
-                      item('Terminé', 1),
+                      item(getLang(context, "active"), 0),
+                      item(getLang(context, "finished"), 1),
                       if(state.appMode!=UserTypes.client)
-                      item('Autre',2),
+                      item(getLang(context, "other"),2),
                     ],
                   ),
                 ),
@@ -122,7 +123,7 @@ class _JournalScreenState extends State<JournalScreen> {
           Text('error', style: GoogleFonts.inter(color: Colors.red),),
           const SizedBox(height: 10,),
           MyCustomButton(
-            name: 'Try again',
+            name: getLang(context, "try_again"),
             height: 45,
             borderRadius: 23,
             onClick: _fetchData,

@@ -1,4 +1,5 @@
 import 'package:builmeet/core/constants/app_colors.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/validator/validator.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/form_field.dart';
@@ -50,7 +51,7 @@ class _EmployeeDialogueState extends State<EmployeeDialogue> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Intéressé',style: GoogleFonts.inter(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                Text(getLang(context, "interested"),style: GoogleFonts.inter(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
 
                 Row(
                   children: [
@@ -66,7 +67,7 @@ class _EmployeeDialogueState extends State<EmployeeDialogue> {
                           });
                         }
                     ),
-                    Text('la meme remuneration',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),)
+                    Text(getLang(context,"same_price"),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),)
                   ],
                 ),
                 Row(
@@ -82,7 +83,7 @@ class _EmployeeDialogueState extends State<EmployeeDialogue> {
                           });
                         }
                     ),
-                    Text('Augmenter la remuneration',
+                    Text(getLang(context,"augment_price"),
                       style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),
                     )
                   ],
@@ -115,7 +116,7 @@ class _EmployeeDialogueState extends State<EmployeeDialogue> {
                     :
                     const SizedBox(),
                 const SizedBox(height: 20,),
-                MyCustomButton(name: 'Confirmer',
+                MyCustomButton(name: getLang(context, "confirmer"),
                   hasBorder: true,
                   borderRadius: 20,
                   height: 50,

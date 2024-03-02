@@ -1,5 +1,6 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/data/data_providers/firebase/models/user_model.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
@@ -27,7 +28,7 @@ class VoirOfferEmployee extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.scaffoldColor,
         centerTitle: true,
-        title:Text('Détails de la commande',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),) ,
+        title:Text(getLang(context, "offer_details"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),) ,
         leading: IconButton(
           onPressed: ()=>GoRouter.of(context).pop(),
           icon:const Icon(Icons.arrow_back_ios_new,color: AppColors.primaryColor,),
@@ -45,22 +46,22 @@ class VoirOfferEmployee extends StatelessWidget {
                 Align(
                     alignment: Alignment.center,
                     child: profile()),
-                info('Metier requis', interestEntity.offer!.metier!),
+                info(getLang(context, "metier_requis"), interestEntity.offer!.metier!),
                 info('Description', interestEntity.offer!.description!),
-                info('Adress', interestEntity.offer!.address!),
+                info(getLang(context, "offer_address"), interestEntity.offer!.address!),
 
 
                 listTile(
                     const Icon(Icons.calendar_month,color: AppColors.primaryColor,),
-                    'De ${dateFormatter(interestEntity.offer!.dateDebut!)} à ${dateFormatter(interestEntity.offer!.dateFin!)}'
+                    '${getLang(context, "de")} ${dateFormatter(interestEntity.offer!.dateDebut!)} ${getLang(context, "a")} ${dateFormatter(interestEntity.offer!.dateFin!)}'
                 ),
-                listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${interestEntity.offer!.nbHourPerDay} Heures/jour'),
+                listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${interestEntity.offer!.nbHourPerDay} ${getLang(context, "hour_jour")}'),
 
 
                 Row(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Remunération',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+                    Text(getLang(context, "remuneration"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
                     Text('${interestEntity.offer!.price} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
                   ],
                 ),

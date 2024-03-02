@@ -6,6 +6,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -101,7 +102,7 @@ class _LoginSecrenState extends State<LoginSecren> {
                         borderColor: AppColors.primaryColor.withOpacity(0.5),
                         activeBorderColor: AppColors.primaryColor,
                         fillColor: Colors.white,
-                        hint: 'Adresse email',
+                        hint: getLang(context,"addr_email" ),
                         controller: addressEmail,
                         validator: Validator()
                             .required()
@@ -115,7 +116,7 @@ class _LoginSecrenState extends State<LoginSecren> {
                         borderColor: AppColors.primaryColor.withOpacity(0.5),
                         activeBorderColor: AppColors.primaryColor,
                         fillColor: Colors.white,
-                        hint: 'Mot de passe',
+                        hint: getLang(context, "mot_pass"),
                         hintColor: Colors.grey,
                         controller: password,
                         isPassWord: true,
@@ -128,21 +129,21 @@ class _LoginSecrenState extends State<LoginSecren> {
                         label: ''),
                     const SizedBox(height: 20,),
 
-                    MyCustomButton(name: "Se connecter",
+                    MyCustomButton(name: getLang(context, "seconnecte"),
                       color: AppColors.primaryColor,
                       borderRadius: 25,
                       height: 50,
                       onClick: login,
                       fontSize: 25,),
                     const SizedBox(height: 20,),
-                    MyTextButton(name: 'Mot passe oublié?',color: AppColors.primaryColor,onclick: forgetPassword,)
+                    MyTextButton(name: getLang(context, "forget_password"),color: AppColors.primaryColor,onclick: forgetPassword,)
                   ],
                 ),
               ),
 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                child: MyCustomButton(name: 'Créer un compte',
+                child: MyCustomButton(name: getLang(context, "create_account"),
                   color: AppColors.scaffoldColor,
                   hasBorder: true,
                   onClick: register,
@@ -182,7 +183,7 @@ class _LoginSecrenState extends State<LoginSecren> {
       showProgressBar(context);
     }else if(state.loginStatus==AppStatus.error){
       hideDialogue(context);
-      showInfoDialogue(MessageUi(state.error ?? 'error', AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
+      showInfoDialogue(MessageUi(getLang(context,state.error ?? "error"), AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
     }else if(state.loginStatus==AppStatus.success){
       GoRouter goRouter = GoRouter.of(context);
 

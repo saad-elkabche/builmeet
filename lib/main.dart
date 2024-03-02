@@ -1,5 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
+import 'package:builmeet/core/services/local_service/local_controller.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/thems/light/light_theme.dart';
 import 'package:builmeet/data/data_providers/firebase/auth_service/auth_service.dart';
@@ -16,6 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
 void main() async{
@@ -39,6 +42,7 @@ void main() async{
 Future<void> prepareDependencies() async{
   SharedPrefService sharedPrefService=await SharedPrefService.initializeService();
   DateFormat format = DateFormat.yMMMEd();
+  LocalController localController=LocalController(sharedPrefService: sharedPrefService);
 
   FirebaseAuth firebaseAuth=FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore=FirebaseFirestore.instance;
@@ -56,11 +60,29 @@ Future<void> prepareDependencies() async{
   Dependencies.put(format);
   Dependencies.put(repository);
   Dependencies.put(firebaseAuth);
+  Dependencies.put(localController);
 }
 
-class BuilmeetApp extends StatelessWidget {
+
+
+class BuilmeetApp extends StatefulWidget {
   const BuilmeetApp({super.key});
 
+  @override
+  State<BuilmeetApp> createState() => _BuilmeetAppState();
+}
+
+class _BuilmeetAppState extends State<BuilmeetApp> {
+
+  late LocalController localController;
+
+
+  @override
+  void initState() {
+    super.initState();
+    localController=Dependencies.get<LocalController>();
+    localController.addListenner(onLocalChange);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +91,23 @@ class BuilmeetApp extends StatelessWidget {
       title: 'Builmeet',
       theme:lightTheme,
       routerConfig: Routes.router,
+      localizationsDelegates:const [
+        AppLocale.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: localController.currentLocal,
+      supportedLocales:const [
+        Locale('en'),
+        Locale('fr'),
+      ],
     );
+  }
+
+  void onLocalChange() {
+    setState(() {
+
+    });
   }
 }

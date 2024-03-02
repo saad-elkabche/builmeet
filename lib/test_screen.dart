@@ -1,4 +1,7 @@
+import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
+import 'package:builmeet/core/services/local_service/local_controller.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
 import 'package:builmeet/domain/repository/repository.dart';
 import 'package:builmeet/presentation/ui/secreens/main_screen/main_screen.dart';
@@ -22,10 +25,20 @@ class _TestScreenState extends State<TestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: Text('create account'),
-          onPressed: updateEmail,
-        ),
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            Text(getLang(context, "hello")),
+
+            ElevatedButton(onPressed: ()=>Dependencies.get<LocalController>().changelang(Langs.english)
+                , child: Text('english')),
+            const SizedBox(height: 10,),
+            ElevatedButton(onPressed: ()=>Dependencies.get<LocalController>().changelang(Langs.frensh),
+                child: Text('frensh')),
+
+          ],
+        )
       ),
     );
   }

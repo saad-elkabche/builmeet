@@ -7,6 +7,7 @@ import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/presentation/blocs/onboarding_cubit/onboarding_cubit.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
@@ -64,14 +65,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 10,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                  child: Text(AppStrings.onBoardingStrings,
+                  child: Text(getLang(context, "onboarding_text"),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(color: Colors.black,
                         fontSize: 15,
                         fontWeight: FontWeight.w700),),
                 ),
                 const SizedBox(height: 15,),
-                MyCustomButton(name: AppStrings.onboardingAction,
+                MyCustomButton(name: getLang(context, 'commencer'),
                   fontSize: 25,
                   color: AppColors.primaryColor,borderRadius: 25,height: 50,onClick: onCommencerClick,),
                 BlocListener<OnboardingCubit,OnboardingState>(

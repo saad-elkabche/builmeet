@@ -37,7 +37,8 @@ class OfferInterestsBloc extends Bloc<OfferInterestsEvent, OfferInterestsState> 
       emit(state.copyWith(operationStatus: AppStatus.loading));
       InterestEntity interestEntity=event.interestEntity;
 
-      OfferEntity newOffer=interestEntity.offer!.copyWith(employee: interestEntity.user);
+      double? price=interestEntity.interestPrice;
+      OfferEntity newOffer=interestEntity.offer!.copyWith(employee: interestEntity.user,price: price);
       InterestEntity newInterest=interestEntity.copyWith(offerEntity: newOffer);
       InterestEntity interestEntityRes=await repository.acceptInterest(newInterest);
 

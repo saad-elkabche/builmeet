@@ -48,13 +48,13 @@ class OfferEntity {
     this.interestEntity=interestEntity;
   }
 
-  OfferEntity copyWith({InterestEntity? interestEntity,int? clientRate,int? employeeRate,UserEntity? employee}){
+  OfferEntity copyWith({InterestEntity? interestEntity,double? price,int? clientRate,int? employeeRate,UserEntity? employee}){
     return OfferEntity(
     offerId: this.offerId,
     metier: this.metier,
     description: this.description,
     address: this.address,
-    price: this.price,
+    price: price ?? this.price,
     pricingType: this.pricingType,
     dateCreation: this.dateCreation,
     dateDebut: this.dateDebut,

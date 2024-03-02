@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPrefService{
   static const String firstUse='FIRST_USE';
   static const String app_mode='APP_MODE';
+  static const String app_lang='app_lang';
 
   late SharedPreferences _pref;
 

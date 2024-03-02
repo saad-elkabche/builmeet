@@ -3,6 +3,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
@@ -65,7 +66,7 @@ class _OfferInterestsScreenState extends State<OfferInterestsScreen> {
         ),
         centerTitle: true,
         title: Text(
-          'les intéressés',
+          getLang(context, "intersteds"),
           style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),
         ),
       ),
@@ -86,7 +87,7 @@ class _OfferInterestsScreenState extends State<OfferInterestsScreen> {
                     children: [
                       Text('eroor',style: GoogleFonts.inter(color: Colors.red),),
                       const SizedBox(height: 10,),
-                      MyCustomButton(name: 'Try again',color: AppColors.primaryColor,textColor: Colors.white,onClick: _fetchData,)
+                      MyCustomButton(name: getLang(context, "try_again"),color: AppColors.primaryColor,textColor: Colors.white,onClick: _fetchData,)
                     ],
                   );
                 }else if(state.fetchingInterestsStatus==AppStatus.success){

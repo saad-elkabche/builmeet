@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
@@ -39,7 +40,7 @@ class JournalOfferClient extends StatelessWidget {
           children: [
             infos(),
             const SizedBox(height: 10,),
-            getActions()
+            getActions(context)
           ],
         ) ,
       ),
@@ -90,24 +91,24 @@ class JournalOfferClient extends StatelessWidget {
     );
   }
 
-  Widget getActions() {
+  Widget getActions(BuildContext context) {
     if(offerEntity.orderStatus==OrderStatus.finished){
-      return voirButton();
+      return voirButton(context);
     }else if(offerEntity.orderStatus==OrderStatus.active){
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          voirButton(),
-          finishButton()
+          voirButton(context),
+          finishButton(context)
         ],
       );
     }
     return SizedBox();
   }
 
-  Widget voirButton(){
+  Widget voirButton(BuildContext context){
     return MyCustomButton(
-        name:'Voir',
+        name:getLang(context, 'see'),
       color: Colors.white,
       width: 150,
       horizontalMargin: 0,
@@ -120,9 +121,9 @@ class JournalOfferClient extends StatelessWidget {
       onClick:()=> onVoir?.call(offerEntity),
     );
   }
-  Widget finishButton(){
+  Widget finishButton(BuildContext context){
     return MyCustomButton(
-      name:'Terminer',
+      name:getLang(context, "terminer"),
       color: AppColors.primaryColor,
       width: 150,
       horizontalMargin: 0,

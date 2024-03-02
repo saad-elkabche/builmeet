@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
@@ -42,14 +43,14 @@ class JournalOfferEmployee extends StatelessWidget {
         child:Column(
           children: [
             infos(),
-            status(),
+            status(context),
             const SizedBox(height: 10,),
             SizedBox(
               width:double.infinity,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  voirButton(),
+                  voirButton(context),
                   if(interestEntity.interestStatus==InterestsStatus.accepted)
                   Positioned(
                       right: 5,
@@ -107,10 +108,10 @@ class JournalOfferEmployee extends StatelessWidget {
     );
   }
 
-  Widget voirButton(){
+  Widget voirButton(BuildContext context){
 
     return MyCustomButton(
-      name:'Voir',
+      name:getLang(context, "see"),
       color: Colors.white,
       width: 150,
       horizontalMargin: 0,
@@ -143,22 +144,22 @@ class JournalOfferEmployee extends StatelessWidget {
 
   }
 
-  String getStatusString(){
+  String getStatusString(BuildContext context){
     if(interestEntity.interestStatus==InterestsStatus.refused){
-      return 'refuse';
+      return getLang(context,'refuse');
     }else if(interestEntity.interestStatus==InterestsStatus.taken){
-      return 'already taken';
+      return getLang(context, "already_taken");
     }else if(interestEntity.interestStatus==InterestsStatus.pending){
       if(interestEntity.offer!.orderStatus==OrderStatus.stopped){
-        return 'order Stoped';
+        return getLang(context, "order_stopped");
       }else{
-        return 'pending';
+        return getLang(context, "pending");
       }
     }
     return '';
   }
 
-  Widget status() {
+  Widget status(BuildContext context) {
     if(interestEntity.interestStatus==InterestsStatus.accepted){
       return SizedBox();
     }
@@ -168,7 +169,7 @@ class JournalOfferEmployee extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Status',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
-          Text(getStatusString(),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
+          Text(getStatusString(context),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
         ],
       ),
     );

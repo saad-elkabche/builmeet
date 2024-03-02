@@ -2,6 +2,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/core/validator/validator.dart';
@@ -104,7 +105,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 const SizedBox(height: 25,),
 
                 MyFormField(
-                    hint: 'Méties requis',
+                    hint: getLang(context, "metier_requis"),
                     label: '',
                     hintColor: Colors.grey,
                     fillColor: Colors.white,
@@ -120,7 +121,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 const SizedBox(height: 15,),
 
                 MyFormField(
-                  hint: 'Description, chronologie, et autre ..',
+                  hint: getLang(context,"add_offer_description" ),
                   label: '',
                   isLarge: true,
                   hintColor: Colors.grey,
@@ -137,7 +138,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 const SizedBox(height: 15,),
 
                 MyFormField(
-                  hint: 'Adresse',
+                  hint: getLang(context, "offer_address"),
                   label: '',
                   hintColor: Colors.grey,
                   fillColor: Colors.white,
@@ -152,7 +153,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
                 const SizedBox(height: 15,),
 
-                input(name: "Nombre d'heure par jour",
+                input(name: getLang(context, "nb_hour_per_jour"),
                     colorText: AppColors.primaryColor,
                     fieldWidth: 90,
                     onChange: (val)=>calculFees(),
@@ -172,7 +173,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
                 const SizedBox(height: 15,),
 
-                input(name: "Date de début",
+                input(name: getLang(context, "date_begin"),
                     colorText: AppColors.primaryColor,
                     fieldWidth: 150,
                     controller: dateBeginController,
@@ -185,7 +186,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
                 const SizedBox(height: 15,),
 
-                input(name: "Date de fin",
+                input(name: getLang(context, "date_end"),
                     colorText: AppColors.primaryColor,
                     fieldWidth: 150,
                     controller: dateEndController,
@@ -202,12 +203,12 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Rénumération',
+                    Text(getLang(context, "remuneration"),
                       style: GoogleFonts.inter(color: AppColors.primaryColor,fontSize: 16,fontWeight: FontWeight.bold),),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Totale',
+                        Text(getLang(context, "total"),
                           style: GoogleFonts.inter(
                               color: AppColors.primaryColor,
                               fontWeight:isByHour?FontWeight.normal:FontWeight.bold),),
@@ -227,7 +228,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                               calculFees();
                             }
                         ),
-                        Text('Heure',
+                        Text(getLang(context, "hour"),
                           style: GoogleFonts.inter(
                               color: AppColors.primaryColor,
                               fontWeight:isByHour?FontWeight.bold:FontWeight.normal
@@ -241,7 +242,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 const SizedBox(height: 15,),
 
                 input(
-                    name:isByHour?"Renumeration par heure":"Renumeration par totale",
+                    name:isByHour?getLang(context, "rem_per_hour"):getLang(context, "rem_per_totale"),
                     colorText: Colors.black,
                     fieldWidth: 110,
                     onChange: (val)=>calculFees(),
@@ -262,7 +263,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Commision BUILMEET 10%',style: GoogleFonts.inter(fontWeight:FontWeight.bold,fontSize: 16,color: Colors.black),),
+                    Text(getLang(context, "commission_builmet"),style: GoogleFonts.inter(fontWeight:FontWeight.bold,fontSize: 16,color: Colors.black),),
                     BlocBuilder<AddOfferBloc,AddOfferState>(
                         builder: (context,state){
                           return Text('${state.commision ?? ''}€',
@@ -277,7 +278,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Cout Totale de la mission',style: GoogleFonts.inter(fontSize: 16,color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+                    Text(getLang(context, "total_price"),style: GoogleFonts.inter(fontSize: 16,color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
                     BlocBuilder<AddOfferBloc,AddOfferState>(
                         builder: (context,state){
                           return Text('${state.totale ?? ''}€',
@@ -289,7 +290,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                   ],
                 ),
                 const SizedBox(height: 15,),
-                MyCustomButton(name: 'Envoyer',textColor: Colors.white,borderRadius: 25,height: 50,onClick: _createOffer,),
+                MyCustomButton(name: getLang(context, "send"),textColor: Colors.white,borderRadius: 25,height: 50,onClick: _createOffer,),
                 const SizedBox(height: 25,),
 
                 BlocListener<AddOfferBloc,AddOfferState>(
@@ -462,7 +463,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
   void showDateWarning() {
     showInfoDialogue(
-        MessageUi('Date Fin should be\nafter date debut', AppStatus.warning, 'Okay'),
+        MessageUi(getLang(context, "date_error"), AppStatus.warning, 'Okay'),
         context,
             () {hideDialogue(context); });
   }
@@ -477,7 +478,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
       showInfoDialogue(MessageUi(state.error??'error', AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
     }else if(state.addOfferStatus==AppStatus.success){
       hideDialogue(context);
-      showInfoDialogue(MessageUi('Offer is Created', AppStatus.success, 'Okay'), context, () {
+      showInfoDialogue(MessageUi(getLang(context, "offer_created"), AppStatus.success, 'Okay'), context, () {
         hideDialogue(context);
         GoRouter goRouter=GoRouter.of(context);
         while(goRouter.canPop()){

@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/core/services/total_mission_calculator.dart';
 import 'package:builmeet/domain/entities/offer_entity.dart';
@@ -52,32 +53,32 @@ class OfferWidgetEmployee extends StatelessWidget {
             Align(
                 alignment: Alignment.center,
                 child: profile()),
-            info('Metier requis', offerEntity!.metier!),
+            info(getLang(context, "metier_requis"), offerEntity!.metier!),
             info('Description', offerEntity!.description!),
-            info('Adress', offerEntity!.address!),
+            info(getLang(context, "adress"), offerEntity!.address!),
 
 
             listTile(
                 const Icon(Icons.calendar_month,color: AppColors.primaryColor,),
-                'De ${dateFormatter(offerEntity!.dateDebut!)} à ${dateFormatter(offerEntity!.dateFin!)}'
+                '${getLang(context, "de")} ${dateFormatter(offerEntity!.dateDebut!)} ${getLang(context, "a")} ${dateFormatter(offerEntity!.dateFin!)}'
             ),
-            listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${offerEntity!.nbHourPerDay} Heures/jour'),
+            listTile(const Icon(Icons.timer_outlined,color: AppColors.primaryColor,),'${offerEntity!.nbHourPerDay} ${getLang(context, "hour_jour")}'),
 
 
             Row(
               mainAxisAlignment:MainAxisAlignment.spaceBetween,
               children: [
-                Text('Remunération',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+                Text(getLang(context, "remuneration"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
                 Text('${offerEntity!.price!.toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
               ],
             ),
             SizedBox(height: 25,),
 
             if(offerEntity?.interestEntity==null)
-            getAction(),
+            getAction(context),
 
             if(offerEntity?.interestEntity!=null)
-              getOfferStatus()
+              getOfferStatus(context)
 
           ],
 
@@ -94,11 +95,11 @@ class OfferWidgetEmployee extends StatelessWidget {
     );
   }
 
-  String getStatus(){
+  String getStatus(BuildContext context){
     switch(offerEntity!.interestEntity!.interestStatus){
-      case InterestsStatus.accepted:return "Accepter";
-      case InterestsStatus.pending:return "Pending";
-      case InterestsStatus.refused:return  "Refused";
+      case InterestsStatus.accepted:return getLang(context, "accepter");
+      case InterestsStatus.pending:return getLang(context, "pending");
+      case InterestsStatus.refused:return  getLang(context, "refuse");
       default:return '';
     }
   }
@@ -127,12 +128,12 @@ class OfferWidgetEmployee extends StatelessWidget {
     );
   }
 
-  Widget getAction() {
+  Widget getAction(BuildContext context) {
     if(offerEntity!.orderStatus==OrderStatus.pending){
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          MyCustomButton(name: 'Pas interesse',
+          MyCustomButton(name: getLang(context,"not_interested"),
             height: 40,
             width: 140,
             color: Colors.white,
@@ -143,7 +144,7 @@ class OfferWidgetEmployee extends StatelessWidget {
             borderColor: AppColors.primaryColor,
             onClick:()=> onPasInterss?.call(offerEntity!,index),
           ),
-          MyCustomButton(name: 'Interesse',
+          MyCustomButton(name: getLang(context, "interes"),
             height: 40,
             width: 140,
             color: AppColors.primaryColor,
@@ -191,12 +192,12 @@ Widget profile(){
     );
   }
 
-  Widget getOfferStatus() {
+  Widget getOfferStatus(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Status:',style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
-        Text(getStatus(),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),)
+        Text(getLang(context, getLang(context, "status")),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+        Text(getStatus(context),style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),)
       ],
     );
   }

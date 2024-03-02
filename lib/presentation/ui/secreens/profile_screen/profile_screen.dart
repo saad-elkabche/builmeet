@@ -1,7 +1,10 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/extenssions/langs_extenssion.dart';
 import 'package:builmeet/core/extenssions/user_types_extenssion.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
+import 'package:builmeet/core/services/local_service/local_controller.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -14,6 +17,7 @@ import 'package:builmeet/presentation/blocs/profile_bloc/profile_bloc.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
 import 'package:builmeet/presentation/ui/components/form_field.dart';
+import 'package:builmeet/presentation/ui/secreens/profile_screen/components/change_lang_dialogue.dart';
 import 'package:builmeet/presentation/ui/secreens/profile_screen/components/info_item.dart';
 import 'package:builmeet/presentation/ui/secreens/profile_screen/components/profile_header.dart';
 import 'package:builmeet/routes.dart';
@@ -158,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Mode Prestataire',style:GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 17) ,),
+            Text(getLang(context, "mode_pres"),style:GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 17) ,),
             Switch(
                 value: state.appMode==UserTypes.employee,
                 activeColor: Colors.white,
@@ -230,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }else if(state.fetchingDataStatus==AppStatus.success){
       return InfoItem(
         icon: Icons.lock_open,
-        info: 'Password',
+        info: getLang(context, "mot_pass"),
         onEdit: editPassword,
       );
     }
@@ -242,7 +246,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }else if(state.fetchingDataStatus==AppStatus.success){
       return InfoItem(
         icon: Icons.language_sharp,
-        info: 'Language',
+        info: getLang(context, "lang"),
+        onEdit: _editLangs,
       );
     }
     return const SizedBox();
@@ -255,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
    }else if(state.fetchingDataStatus==AppStatus.success){
      return InfoItem(
        icon: FontAwesomeIcons.donate,
-       info: 'Metiers',
+       info: getLang(context, "metier"),
        onEdit: _navToEditEmployeeInfos,
        subInfo: Wrap(
          alignment: WrapAlignment.start,
@@ -276,7 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return InfoItem(
         withIcon: false,
         icon: Icons.location_city,
-        info:'Address',
+        info:getLang(context, "adress"),
         subInfo: state.userEntity?.address,
       );
     }
@@ -298,7 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget devenirUnPrestataire(ProfileState state) {
     if(state.fetchingDataStatus==AppStatus.success && state.userEntity!.type==UserTypes.client){
       return MyCustomButton(
-        name: 'Devenir Prestataire',
+        name: getLang(context, "become_employee"),
         color: Colors.white,
         hasBorder: true,
         height: 50,
@@ -314,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget deconnecter(ProfileState state) {
     if(state.fetchingDataStatus==AppStatus.success){
       return MyCustomButton(
-        name: 'Se déconnecté',
+        name: getLang(context, "logout"),
         color: AppColors.primaryColor,
         hasBorder: true,
         height: 50,
@@ -398,7 +403,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 10,),
                 child,
                 const SizedBox(height: 30,),
-                MyCustomButton(name: 'Save',
+                MyCustomButton(name: getLang(context, "save"),
                     height: 40,
                     borderRadius: 20,
                     color: AppColors.primaryColor,
@@ -559,6 +564,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       profileBloc.add(RefreshData(result));
     }
   }
+
+  void _editLangs() async{
+    LocalController  localController=Dependencies.get<LocalController>();
+     String currentLangCode=localController.currentLocal.languageCode;
+    var result=await showDialog(
+        context: context,
+        builder: (ctx){
+          return ChangeLangDialogue(lang: currentLangCode.langCodeString);
+        }
+    );
+    if(result is Langs){
+      localController.changelang(result);
+    }
+  }
+
 }
 
 

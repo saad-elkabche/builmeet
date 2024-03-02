@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -75,7 +76,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
                 Icons.arrow_back_ios, color: AppColors.primaryColor,),
             ),
             title: Text(
-              'Update',
+              getLang(context, "update"),
               style: GoogleFonts.inter(
                   color: AppColors.primaryColor, fontWeight: FontWeight.bold),
             ),
@@ -90,7 +91,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
                   children: [
                     const SizedBox(height: 20,),
                     Text(
-                      "Veuillez fournir toutes les informations nécessaires pour garantir une mise en relation optimale",
+                      getLang(context, "become_employee_description"),
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -117,7 +118,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
                     const SizedBox(height: 10,),
 
                     MyFormField(
-                      hint: 'Métier 3 maximum',
+                      hint: getLang(context, "three_metier"),
                       label: '',
                       hintColor: Colors.grey,
                       fillColor: Colors.white,
@@ -131,7 +132,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
                     const SizedBox(height: 10,),
 
                     MyFormField(
-                      hint: 'Address',
+                      hint: getLang(context, "offer_address"),
                       label: '',
                       validator: Validator().required().make(),
                       hintColor: Colors.grey,
@@ -180,7 +181,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
                     ),
                     const SizedBox(height: 40,),
 
-                    MyCustomButton(name: 'Save',
+                    MyCustomButton(name: getLang(context, "save"),
                       height: 50,
                       borderRadius: 25,
                       color: AppColors.primaryColor,
@@ -249,7 +250,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
             UpdateEmployeeInfos(addressController.text, descriptionController.text)
         );
       }else{
-        showInfoDialogue(MessageUi('metier is required', AppStatus.warning, 'okay'), context, () {hideDialogue(context); });
+        showInfoDialogue(MessageUi(getLang(context, "metier_required"), AppStatus.warning, 'okay'), context, () {hideDialogue(context); });
       }
     }
   }

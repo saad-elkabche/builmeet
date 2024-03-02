@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/rates_calculator.dart';
 import 'package:builmeet/domain/entities/InterestEntity.dart';
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
@@ -42,7 +43,7 @@ class InterestWidget extends StatelessWidget {
             children: [
               if(interesEntity.interestStatus==InterestsStatus.pending)
               Expanded(
-                  child:MyCustomButton(name: 'Refused',
+                  child:MyCustomButton(name: getLang(context,'refuse'),
                     color: Colors.white,
                     height: 40,
                     borderRadius: 20,
@@ -59,7 +60,7 @@ class InterestWidget extends StatelessWidget {
                       constraints: const BoxConstraints(
                         maxWidth: 160
                       ),
-                      child: MyCustomButton(name: 'Voir',
+                      child: MyCustomButton(name: getLang(context, "see"),
                         color: Colors.white,
                         textColor: AppColors.primaryColor,
                         hasBorder: true,
@@ -75,7 +76,7 @@ class InterestWidget extends StatelessWidget {
               ),
               if(interesEntity.interestStatus==InterestsStatus.pending)
               Expanded(
-                  child:MyCustomButton(name: 'Accepter',
+                  child:MyCustomButton(name: getLang(context, "accepter"),
                     color: AppColors.primaryColor,
                     textColor: Colors.white,
                     onClick: ()=>onAccept?.call(interesEntity),

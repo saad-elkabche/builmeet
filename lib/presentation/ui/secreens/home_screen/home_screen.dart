@@ -3,6 +3,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_strings.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -119,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Column(
         children: [
           Text('Error',style: GoogleFonts.inter(color: Colors.red),),
-          MyCustomButton(name: 'Try Again',textColor: Colors.white,color: AppColors.primaryColor,onClick: _fetchData,)
+          MyCustomButton(name: getLang(context, "try_again"),textColor: Colors.white,color: AppColors.primaryColor,onClick: _fetchData,)
         ],
       );
     }else if(state.fetchingDataStatus==AppStatus.success){
@@ -159,7 +160,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onClientLesInteresse(OfferEntity offer) {
-    GoRouter.of(context).push(Routes.offerInterests,extra: offer);
+    if((offer.countInterests ?? 0)>0){
+      GoRouter.of(context).push(Routes.offerInterests, extra: offer);
+    }
   }
 
   void onEmployeeInteress(OfferEntity offer) async{
@@ -193,10 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
       showProgressBar(context);
     }else if(state.operationStatus==AppStatus.error){
       hideDialogue(context);
-      showInfoDialogue(MessageUi('Error', AppStatus.error, 'Okey'), context, () {hideDialogue(context); });
+      showInfoDialogue(MessageUi('Error', AppStatus.error, 'Okay'), context, () {hideDialogue(context); });
     }else if(state.operationStatus==AppStatus.success){
       hideDialogue(context);
-      showInfoDialogue(MessageUi('Success', AppStatus.success, 'Okey'), context, () {hideDialogue(context); });
+      showInfoDialogue(MessageUi(getLang(context, "success"), AppStatus.success, 'Okay'), context, () {hideDialogue(context); });
     }
   }
 }

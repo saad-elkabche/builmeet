@@ -2,6 +2,7 @@ import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/app_images_icons.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -65,9 +66,9 @@ class _RatingScreeenState extends State<RatingScreeen> {
             ),
             Image.asset(AppImages.img_check,fit: BoxFit.cover,),
             const SizedBox(height: 20,),
-            Text('La mission a été bien\naccompile',textAlign: TextAlign.center,style: GoogleFonts.inter(color: AppColors.primaryColor,fontSize: 20,fontWeight: FontWeight.bold),),
+            Text(getLang(context, "mission_complete"),textAlign: TextAlign.center,style: GoogleFonts.inter(color: AppColors.primaryColor,fontSize: 20,fontWeight: FontWeight.bold),),
             const SizedBox(height: 15,),
-            Text('Votre avis compte!\nMerci de prendre un moment pour le\nnoter',
+            Text(getLang(context, "your_review"),
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(color: Colors.black,fontSize: 17,fontWeight: FontWeight.bold),),
 

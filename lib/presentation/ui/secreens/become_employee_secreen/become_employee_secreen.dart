@@ -1,6 +1,7 @@
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
+import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
@@ -74,7 +75,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
           icon: const Icon(Icons.arrow_back_ios,color: AppColors.primaryColor,),
         ),
         title: Text(
-          'Devenir un prestataire',
+          getLang(context, "become_employee"),
           style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -87,7 +88,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
             child: Column(
               children: [
                 const SizedBox(height: 20,),
-                Text("Veuillez fournir toutes les informations nécessaires pour garantir une mise en relation optimale",
+                Text(getLang(context, "become_employee_description"),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 15),
                 ),
@@ -111,7 +112,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
                 const SizedBox(height: 10,),
 
                 MyFormField(
-                    hint: 'Métier 3 maximum',
+                    hint: getLang(context, "three_metier"),
                     label: '',
                     hintColor: Colors.grey,
                     fillColor: Colors.white,
@@ -124,7 +125,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
                 const SizedBox(height: 10,),
 
                 MyFormField(
-                  hint: 'Address',
+                  hint: getLang(context, "offer_address"),
                   label: '',
                   validator: Validator().required().make(),
                   hintColor: Colors.grey,
@@ -173,7 +174,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
                 ),
                 const SizedBox(height: 40,),
 
-                MyCustomButton(name: 'Confirmer',
+                MyCustomButton(name: getLang(context, "confirmer"),
                   height: 50,
                   borderRadius: 25,
                   color: AppColors.primaryColor,
@@ -233,7 +234,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
       if((state.metiers?.length ?? 0)>0){
         BlocProvider.of<BecomeEmployeeBloc>(context).add(Confimer(addressController.text,descriptionController.text));
       }else{
-        showInfoDialogue(MessageUi('metier is required', AppStatus.warning, 'okay'), context, () {hideDialogue(context); });
+        showInfoDialogue(MessageUi(getLang(context, "metier_required"), AppStatus.warning, 'okay'), context, () {hideDialogue(context); });
       }
 
     }

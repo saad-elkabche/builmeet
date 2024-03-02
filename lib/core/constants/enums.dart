@@ -33,3 +33,9 @@ enum PricingTypes{
 }
 
 
+enum Langs{
+  frensh,
+  english
+}
+
+
