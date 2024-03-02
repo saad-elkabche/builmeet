@@ -123,7 +123,7 @@ class _RegisterSecrenState extends State<RegisterSecren> {
                       borderColor: AppColors.primaryColor.withOpacity(0.5),
                       activeBorderColor: AppColors.primaryColor,
                       fillColor: Colors.white,
-                      hint: getLang(context, "confirm_mot_pass"),
+                      hint: getLang(context, "addr_email"),
                       controller: addressEmail,
                       validator: Validator()
                           .required()
