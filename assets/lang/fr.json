@@ -51,7 +51,7 @@
   "total_price": "Cout Totale de la mission",
   "send": "Envoyer",
   "date_error": "La date de fin doit être\naprès la date de début.",
-  "offer_created": "Offer is Created",
+  "offer_created": "L'offre est créée",
   "offer_address": "Adresse",
   "become_employee": "Devenir un prestataire",
   "become_employee_description": "Veuillez fournir toutes les informations nécessaires pour garantir une mise en relation optimale",
@@ -77,8 +77,9 @@
   "offer_details": "Détails de la commande",
   "details": "Détails",
   "prestataire": "Prestataire",
-  "intersteds": "les intéressés"
-
+  "intersteds": "les intéressés",
+  "requires_recent_login": "Cette action nécessite une connexion récente.\nEssayez de vous déconnecter puis de vous reconnecter",
+  "email_verification": "Nous vous avons envoyé une\nvérification par e-mail."
 
 
 }

@@ -83,7 +83,7 @@ class JournalOfferClient extends StatelessWidget {
             Text('(${offerEntity.employee?.metiers?.elementAt(0) ?? ''})',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w500)),
             const SizedBox(height: 5,),
-            Text('${(offerEntity.price! * 1.1) ?? ''}€',
+            Text('${(offerEntity.price! * 1.1).toStringAsFixed(2)}€',
                   style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
           ],
         )

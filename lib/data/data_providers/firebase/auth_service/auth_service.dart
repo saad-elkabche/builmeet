@@ -74,7 +74,7 @@ class AuthService{
   Future<void> updateEmail(String newEmail)async{
     try{
       User user = firebaseAuth.currentUser!;
-      await user.verifyBeforeUpdateEmail(newEmail);
+      await user.updateEmail(newEmail);
     }on FirebaseAuthException catch(ex){
       if( ex.code=='requires-recent-login'){
         throw RequiresRecentLoginException();

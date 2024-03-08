@@ -76,5 +76,7 @@
   "offer_details": "Order Details",
   "details": "Details",
   "prestataire": "Service Provider",
-  "intersteds": "The interested"
+  "intersteds": "The interested",
+  "requires_recent_login": "this action requires a recent login\ntry to logout and relogin again",
+  "email_verification": "we have Sent you an\nEmail verification"
 }

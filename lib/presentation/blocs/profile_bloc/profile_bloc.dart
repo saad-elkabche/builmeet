@@ -97,9 +97,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(state.copyWith(
           updateStatus: AppStatus.success,
           intent: ProfileState.updateEmailIntent,
-          message: 'we have Sent you an\nEmail verification'));
+          message: 'success'));
     }on RequiresRecentLoginException catch(ex){
      emit(state.copyWith(updateStatus: AppStatus.error,error: ex.toString()));
+     rethrow;
     }catch(ex){
       emit(state.copyWith(updateStatus: AppStatus.error,));
       print('====================${ex.runtimeType}');

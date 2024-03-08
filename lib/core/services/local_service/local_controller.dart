@@ -19,7 +19,7 @@ class LocalController{
       langCode = sharedPrefService.getValue(
           SharedPrefService.app_mode, Langs.english.langCode);
     }else{
-      langCode=Langs.english.langCode;
+      langCode=Langs.frensh.langCode;
     }
     _currentLocal=Locale(langCode);
   }

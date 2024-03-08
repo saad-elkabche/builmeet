@@ -24,8 +24,11 @@ class VoirEmployeeBloc extends Bloc<VoirEmployeeEvent, VoirEmployeeState> {
     try{
       emit(state.copyWith(operationStatus: AppStatus.loading));
       InterestEntity interestEntity = state.interestEntity!;
+
+      double? newPrice=interestEntity.interestPrice;
+
       OfferEntity newOffer =
-          interestEntity.offer!.copyWith(employee: interestEntity.user);
+          interestEntity.offer!.copyWith(employee: interestEntity.user,price: newPrice);
       InterestEntity newInterest =
           interestEntity.copyWith(offerEntity: newOffer);
       InterestEntity interestEntityRes =

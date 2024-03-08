@@ -100,7 +100,7 @@ class JournalOfferEmployee extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(creator.nomComplet ?? '',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
-            Text('${interestEntity.offer?.price ?? ''}€',
+            Text('${(interestEntity.offer?.price)!.toStringAsFixed(2) }€',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
           ],
         )

@@ -128,7 +128,7 @@ class InterestWidget extends StatelessWidget {
            Text('(${interesEntity.user!.metiers?.elementAt(0) ?? ''})',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w500)),
             if(interesEntity.interestPrice!=null)
-            Text('${(interesEntity.interestPrice! * 1.1) ?? ''}€',
+            Text('${(interesEntity.interestPrice! * 1.1).toStringAsFixed(2)}€',
                 style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold)),
           ],
         )

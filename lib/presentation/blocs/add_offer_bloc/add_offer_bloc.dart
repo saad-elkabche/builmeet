@@ -40,7 +40,7 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
     ){
 
       double price=double.parse(event.price);
-      double commision=price*0.1;
+      double commision;
       double totalWithCommision;
 
       if(event.isByHour){
@@ -51,8 +51,10 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
         int nbHoursPerDay=int.parse(event.nbHour);
         int totalHours=nbDays*nbHoursPerDay;
         double totalWithoutCommision=totalHours*price;
+        commision=totalWithoutCommision*0.1;
         totalWithCommision=totalWithoutCommision*1.1;
       }else{
+        commision=price*0.1;
         totalWithCommision=price*1.1;
       }
 

@@ -438,10 +438,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       showProgressBar(context);
     }else if(state.updateStatus==AppStatus.error){
       hideDialogue(context);
-      showInfoDialogue(MessageUi(state.error ?? 'Error', AppStatus.error, 'try again'), context, () {hideDialogue(context) ;});
+      showInfoDialogue(MessageUi(getLang(context,state.error ?? 'Error'), AppStatus.error, 'try again'), context, () {hideDialogue(context) ;});
     }else if(state.updateStatus==AppStatus.success){
       hideDialogue(context);
-      showInfoDialogue(MessageUi(state.message ?? 'success', AppStatus.success, 'Okay'), context, () {
+      showInfoDialogue(MessageUi(getLang(context,state.message ?? 'success'), AppStatus.success, 'Okay'), context, () {
         if(state.intent==ProfileState.updateEmailIntent || state.intent==ProfileState.updatePasswordIntent){
           BlocProvider.of<ProfileBloc>(context).add(Logout());
         }else{
