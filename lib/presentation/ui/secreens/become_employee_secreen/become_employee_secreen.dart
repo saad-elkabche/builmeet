@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:builmeet/core/constants/app_colors.dart';
 import 'package:builmeet/core/constants/enums.dart';
 import 'package:builmeet/core/dependencies/dependencies.dart';
@@ -12,6 +14,7 @@ import 'package:builmeet/presentation/blocs/become_employee_bloc/become_employee
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
 import 'package:builmeet/presentation/ui/components/form_field.dart';
+import 'package:builmeet/presentation/ui/components/images_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +55,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
   late GlobalKey<FormState> formState;
 
   late double width;
+  late double height;
 
 
 
@@ -67,6 +71,7 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
   @override
   Widget build(BuildContext context) {
     width=MediaQuery.sizeOf(context).width;
+    height=MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.scaffoldColor,
@@ -157,17 +162,8 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
                 const SizedBox(height: 40,),
                 BlocBuilder<BecomeEmployeeBloc,BecomeEmployeeState>(
                     builder: (context,state){
-                      if(state.document!=null){
-                        return Container(
-                            clipBehavior: Clip.hardEdge,
-                            constraints: BoxConstraints(
-                                maxWidth:width*0.9
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(4,4))]
-                            ),
-                            child: Image.memory(state.document!.readAsBytesSync(),fit: BoxFit.cover,));
+                      if(state.documents?.isNotEmpty ?? false){
+                        return ImagesList(height: height*0.35,width: width,images: state.documents!);
                       }
                       return SizedBox();
                     }
@@ -189,6 +185,23 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+  Widget documentImage(File image){
+    return Center(
+      child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          clipBehavior: Clip.hardEdge,
+          constraints: BoxConstraints(
+              maxWidth:width*0.7,
+              maxHeight:height*0.3
+          ),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(4,4))]
+          ),
+          child: Image.memory(image.readAsBytesSync(),fit: BoxFit.cover,)
       ),
     );
   }
@@ -229,15 +242,15 @@ class _BecomeEmployeeSecreenState extends State<BecomeEmployeeSecreen> {
   }
 
   void confirmer() {
-    if(formState.currentState!.validate()){
-      BecomeEmployeeState state=BlocProvider.of<BecomeEmployeeBloc>(context).state;
-      if((state.metiers?.length ?? 0)>0){
-        BlocProvider.of<BecomeEmployeeBloc>(context).add(Confimer(addressController.text,descriptionController.text));
-      }else{
-        showInfoDialogue(MessageUi(getLang(context, "metier_required"), AppStatus.warning, 'okay'), context, () {hideDialogue(context); });
-      }
-
+    if(!formState.currentState!.validate()){
+      return;
     }
+    BecomeEmployeeState state=BlocProvider.of<BecomeEmployeeBloc>(context).state;
+    if((state.metiers?.length ?? 0)==0) {
+      showInfoDialogue(MessageUi(getLang(context, "metier_required"), AppStatus.warning, 'okay'), context, () {hideDialogue(context); });
+      return;
+    }
+    BlocProvider.of<BecomeEmployeeBloc>(context).add(Confimer(addressController.text, descriptionController.text));
   }
 
   void pickDocument() {

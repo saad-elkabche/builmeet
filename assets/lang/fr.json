@@ -79,7 +79,10 @@
   "prestataire": "Prestataire",
   "intersteds": "les intéressés",
   "requires_recent_login": "Cette action nécessite une connexion récente.\nEssayez de vous déconnecter puis de vous reconnecter",
-  "email_verification": "Nous vous avons envoyé une\nvérification par e-mail."
-
+  "email_verification": "Nous vous avons envoyé une\nvérification par e-mail.",
+  "document_required": "Un document est requis.",
+  "delete_image_question": "Voulez-vous supprimer cette image ?",
+  "yes": "Oui",
+  "no": "Non"
 
 }

@@ -4,6 +4,7 @@ import 'package:builmeet/core/dependencies/dependencies.dart';
 import 'package:builmeet/core/services/local_service/applocal.dart';
 import 'package:builmeet/core/services/shared_pref_service.dart';
 import 'package:builmeet/core/utils/show_dialogue_infos.dart';
+import 'package:builmeet/core/utils/show_dialogue_question.dart';
 import 'package:builmeet/core/utils/show_progress_dialogue.dart';
 import 'package:builmeet/core/validator/validator.dart';
 import 'package:builmeet/domain/entities/user_entity.dart';
@@ -12,6 +13,7 @@ import 'package:builmeet/presentation/blocs/edit_employee_info_bloc/edit_employe
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
 import 'package:builmeet/presentation/ui/components/form_field.dart';
+import 'package:builmeet/presentation/ui/components/images_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -25,7 +27,10 @@ class EditEmployeeInfosSecreen extends StatefulWidget {
     Repository  repository=Dependencies.get<Repository>();
 
     return BlocProvider<EditEmployeeInfoBloc>(
-      create: (context) => EditEmployeeInfoBloc(userEntity: userEntity,sharedPrefService: sharedPrefService,repository: repository),
+      create: (context) => EditEmployeeInfoBloc(
+          userEntity: userEntity,
+          sharedPrefService: sharedPrefService,
+          repository: repository),
       child: EditEmployeeInfosSecreen(),
     );
   }
@@ -46,6 +51,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
   late GlobalKey<FormState> formState;
 
   late double width;
+  late double height;
 
 
   @override
@@ -64,6 +70,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
   @override
   Widget build(BuildContext context) {
     width=MediaQuery.sizeOf(context).width;
+    height=MediaQuery.sizeOf(context).height;
 
     return BlocBuilder<EditEmployeeInfoBloc, EditEmployeeInfoState>(
       builder: (context, state) {
@@ -162,23 +169,7 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
                       onSuffixClick: _pickDocument,
                     ),
                     const SizedBox(height: 40,),
-                    Container(
-                        clipBehavior: Clip.hardEdge,
-                        constraints: BoxConstraints(
-                            maxWidth:width*0.9
-                        ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(4,4))]
-                        ),
-                        child:state.document!=null
-                            ?
-                        Image.memory(
-                          state.document!.readAsBytesSync(),
-                          fit: BoxFit.cover,)
-                            :
-                            Image.network(state.userEntity!.documentPicUrl!,fit: BoxFit.cover,)
-                    ),
+                   _getImages(state),
                     const SizedBox(height: 40,),
 
                     MyCustomButton(name: getLang(context, "save"),
@@ -200,6 +191,21 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
         );
       },
     );
+  }
+
+  Widget _getImages(EditEmployeeInfoState state) {
+    if((state.userEntity?.documentPicUrls?.isNotEmpty ?? false) || (state.documents?.isNotEmpty ?? false)){
+      return ImagesList(
+          height:height*0.35 ,
+          width: width,
+          images: state.documents,
+          deleteLocalImage: onDeleteLocalImage,
+          deleteRemoteImage: onDeleteRemoteImage,
+          urls: state.userEntity?.documentPicUrls,
+          isEditable: true,
+      );
+    }
+    return SizedBox();
   }
 
 
@@ -256,6 +262,9 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
   }
 
   void _listener(BuildContext context, EditEmployeeInfoState state) {
+
+
+    //check editingInfosStatus
     if(state.editinfosStatus==AppStatus.loading){
       showProgressBar(context);
     }else if(state.editinfosStatus==AppStatus.error){
@@ -265,6 +274,30 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
       hideDialogue(context);
       GoRouter.of(context).pop(state.userEntity);
     }
+
+
+
+    //check delete Image status
+
+
+    if(state.deleteRemoteStatus==AppStatus.loading){
+      showProgressBar(context);
+    }else if(state.deleteRemoteStatus==AppStatus.error){
+      hideDialogue(context);
+      showInfoDialogue(MessageUi('Error', AppStatus.error, 'Okay'), context, () { hideDialogue(context);});
+    }else if(state.deleteRemoteStatus==AppStatus.success){
+      hideDialogue(context);
+    }
+
+
+
+
+
+
+
+
+
+
   }
 
   _deleteMetier(int index) {
@@ -276,4 +309,24 @@ class _EditEmployeeInfosSecreenState extends State<EditEmployeeInfosSecreen> {
     descriptionController.text=state.userEntity?.description ?? '';
     addressController.text=state.userEntity?.address ?? '';
   }
+
+  void onDeleteLocalImage(int index){
+    print('=========================$index');
+    BlocProvider.of<EditEmployeeInfoBloc>(context).add(DeleteLocalImage(index));
+  }
+  void onDeleteRemoteImage(int index)async{
+
+    bool? result=await showDialogueQuestion(
+        context,
+        getLang(context, "delete_image_question"),
+        getLang(context, "yes"),
+        getLang(context, "no"),
+    );
+    if(result ?? false){
+      BlocProvider.of<EditEmployeeInfoBloc>(context).add(DeleteRemoteImage(index));
+    }
+
+  }
+
+
 }

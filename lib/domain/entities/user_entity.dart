@@ -23,11 +23,11 @@ class UserEntity{
   List<String>? metiers;
   String? address;
   String? description;
-  File? document;
+  List<File>? documents;
   double? rate;
   int? nbRates;
   String? profilePicUrl;
-  String? documentPicUrl;
+  List<String>? documentPicUrls;
 
   UserEntity(
       {this.nomComplet,
@@ -40,17 +40,17 @@ class UserEntity{
       this.metiers,
       this.address,
       this.description,
-      this.document,
+      this.documents,
       this.rate,
       this.profilePicUrl,
-      this.documentPicUrl,
+      this.documentPicUrls,
       this.nbRates});
 
 
   UserEntity copyWith({String? email,
     String? password,
     File? imgProfile,
-    File? document,
+    List<File>? documents,
     UserTypes? type,
     String? address,
     String? description,
@@ -69,9 +69,9 @@ class UserEntity{
       type: type ?? this.type,
       imgProfile:imgProfile ?? this.imgProfile,
       dateNaissance: dateNaissance,
-      document: document ?? this.document,
+      documents: documents ?? this.documents,
       metiers: metiers ?? this.metiers,
-      documentPicUrl: documentPicUrl,
+      documentPicUrls: documentPicUrls,
       id: id,
     );
   }

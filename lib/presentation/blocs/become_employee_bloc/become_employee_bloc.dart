@@ -41,10 +41,14 @@ class BecomeEmployeeBloc extends Bloc<BecomeEmployeeEvent, BecomeEmployeeState> 
 
   FutureOr<void> _pickDocument(PickDocument event, Emitter<BecomeEmployeeState> emit) async{
     ImagePicker picker=ImagePicker();
-    XFile? file=await picker.pickImage(source: ImageSource.gallery);
-    if(file!=null){
-      File document=File(file.path);
-      emit(state.copyWith(document: document));
+    List<XFile> files=await picker.pickMultiImage();
+    if(files.isNotEmpty){
+      List<File> documents=[];
+      for(XFile file in files){
+        File document=File(file.path);
+        documents.add(document);
+      }
+      emit(state.copyWith(documents: documents));
     }
   }
 
@@ -55,7 +59,7 @@ class BecomeEmployeeBloc extends Bloc<BecomeEmployeeEvent, BecomeEmployeeState> 
           metiers: state.metiers,
           address: event.address,
           description: event.description,
-          document: state.document,
+          documents: state.documents,
           type: UserTypes.employee
       );
       UserEntity userEntityRes=await repository.setEmployeeData(userEntity);
@@ -63,6 +67,7 @@ class BecomeEmployeeBloc extends Bloc<BecomeEmployeeEvent, BecomeEmployeeState> 
       emit(state.copyWith(becomeEmplyeeStatus: AppStatus.success,userEntity: userEntityRes));
     }catch(ex){
       emit(state.copyWith(becomeEmplyeeStatus: AppStatus.error));
+      rethrow;
     }
   }
 

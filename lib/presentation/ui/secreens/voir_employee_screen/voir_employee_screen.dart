@@ -13,6 +13,7 @@ import 'package:builmeet/presentation/blocs/voir_employee_bloc/voir_employee_blo
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
+import 'package:builmeet/presentation/ui/components/images_list.dart';
 import 'package:builmeet/presentation/ui/components/shimming_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,13 @@ class VoirEmployeeScreen extends StatefulWidget {
 class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
 
   late double width;
+  late double height;
 
 
   @override
   Widget build(BuildContext context) {
     width=MediaQuery.sizeOf(context).width;
+    height=MediaQuery.sizeOf(context).height;
 
     return BlocBuilder<VoirEmployeeBloc, VoirEmployeeState>(
       builder: (context, state) {
@@ -171,7 +174,7 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
 
   Widget description(VoirEmployeeState state) {
 
-    String? documentUrl=state.interestEntity?.user?.documentPicUrl;
+    List<String>? urls=state.interestEntity?.user?.documentPicUrls;
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -184,26 +187,8 @@ class _VoirEmployeeScreenState extends State<VoirEmployeeScreen> {
             child: Text(state.interestEntity!.user!.description!,style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w600),),
           ),
           const SizedBox(height: 20,),
-          if(documentUrl!=null)
-          Container(
-            clipBehavior: Clip.hardEdge,
-            constraints: BoxConstraints(
-              maxWidth: width*0.88
-            ),
-            decoration:  BoxDecoration(
-              boxShadow:const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(3,3))] ,
-              borderRadius: BorderRadius.circular(20)
-            ),
-            child: CachedNetworkImage(
-              imageUrl: documentUrl,
-              errorWidget:(context,str,obj)=>const Icon(Icons.image,color: Colors.red,),
-              placeholder: (ctx,str)=>ShimmingWidget(
-                  width:width*0.8,
-                  baseColor: Colors.grey[200],
-                  shimmingColor: AppColors.primaryColor,
-                  height:width*0.8),
-            ),
-          )
+          if(urls?.isNotEmpty ?? false)
+            ImagesList(height: height*0.35, width: width,urls: urls,)
         ],
       ),
     );

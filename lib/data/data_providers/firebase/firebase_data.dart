@@ -54,6 +54,10 @@ abstract class FirebaseData{
 
   Future<void> clientStopOffer(OfferModel offerModel);
 
+  Future<UserModel> removeDocument(String url);
+
+  //Future<UserModel> updateEmployeeInfos(UserModel userModel);
+
 
 
 }
@@ -149,11 +153,13 @@ class FirebaseDataIml extends FirebaseData{
 
   @override
   Future<UserModel> setEmployeeData(UserModel user) async{
-    String? documentUrl=user.documentUrl;
-    if(user.document!=null){
-      documentUrl=await storageService.uploadFile(user.document!, StorageService.documentsFolderName, '${user.uid}.jpg');
+    String folder="${StorageService.documentsFolderName}/${authService.getCurrentUser().uid}";
+    List<String> documentUrls=user.documentUrls ?? [];
+    if(user.documents?.isNotEmpty ?? false){
+      List<String> urls=await storageService.uploadFiles(user.documents!,folder );
+      documentUrls.addAll(urls);
     }
-    user=user.copyWith(documentUrl: documentUrl);
+    user=user.copyWith(documentUrls: documentUrls);
     UserModel userModelRes=await dbService.setEmployeeData(user);
     return userModelRes;
   }
@@ -223,6 +229,36 @@ class FirebaseDataIml extends FirebaseData{
   Future<void> clientStopOffer(OfferModel offerModel) async{
     await dbService.clientStopOffer(offerModel);
   }
+
+  @override
+  Future<UserModel> removeDocument(String url)async {
+    String uid=authService.getCurrentUser().uid;
+    UserModel userModel=await dbService.getUser(uid);
+    List<String> newUrls=userModel.documentUrls ?? [];
+    newUrls.remove(url);
+    userModel=userModel.copyWith(documentUrls: newUrls);
+    await Future.wait(
+      [
+        storageService.deleteImageByUrl(url),
+        dbService.updateUserDocuments(userModel),
+      ]
+    );
+    UserModel userModelRes=await dbService.getUser(uid);
+    return userModelRes;
+  }
+
+/*  @override
+  Future<UserModel> updateEmployeeInfos(UserModel user) async{
+    String uid=authService.getCurrentUser().uid;
+    List<String> urls=user.documentUrls ?? [];
+    if(user.documents?.isNotEmpty ?? false){
+      List<String> newDocumentsUrls=await storageService.uploadFiles(user.documents!, '${StorageService.documentsFolderName}/${uid}');
+      urls.addAll(newDocumentsUrls);
+    }
+    user=user.copyWith(documentUrls: urls);
+    UserModel userModelRes=await setEmployeeData(user);
+    return userModelRes;
+  }*/
 
 
 

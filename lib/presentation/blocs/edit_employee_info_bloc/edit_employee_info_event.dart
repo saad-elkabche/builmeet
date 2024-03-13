@@ -26,3 +26,16 @@ class UpdateEmployeeInfos extends EditEmployeeInfoEvent{
 
   UpdateEmployeeInfos(this.address, this.description);
 }
+
+
+class DeleteRemoteImage extends EditEmployeeInfoEvent{
+  int index;
+
+  DeleteRemoteImage(this.index);
+}
+
+class DeleteLocalImage extends EditEmployeeInfoEvent{
+  int index;
+
+  DeleteLocalImage(this.index);
+}

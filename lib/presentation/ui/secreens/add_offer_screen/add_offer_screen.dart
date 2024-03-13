@@ -385,7 +385,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
     if(dateDebut!=null && dateFin!=null && dateDebut!.isAfter(dateFin!)){
       showDateWarning();
-      return;
+      //return;
     }
 
     RegExp pattern=RegExp(r'^\d+\.$');

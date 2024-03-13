@@ -10,7 +10,7 @@ double calculTotalMission({
     required int nbHour,
     required double hourPrice,}){
 
-  int nbDays=dateEnd.difference(dateBegin).inDays;
+  int nbDays=dateEnd.difference(dateBegin).inDays+1;
   double total=nbDays*nbHour*hourPrice;
   return total;
 }

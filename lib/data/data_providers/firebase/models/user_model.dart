@@ -25,11 +25,11 @@ class UserModel{
   List<String>? metiers;
   String? address;
   String? description;
-  File? document;
+  List<File>? documents;
   double? rate;
   int? nbRates;
   String? profilePicUrl;
-  String? documentUrl;
+  List<String>? documentUrls;
 
   UserModel(
       {this.nomComplet,
@@ -42,11 +42,11 @@ class UserModel{
         this.metiers,
         this.address,
         this.description,
-        this.document,
+        this.documents,
         this.rate,
         this.profilePicUrl,
         this.nbRates,
-        this.documentUrl,
+        this.documentUrls,
         });
 
 
@@ -59,7 +59,7 @@ class UserModel{
       adressEmail: json['email'],
       dateNaissance: (json['dateNaissance'] as Timestamp).toDate(),
       description: json['description'],
-      documentUrl: json['documentUrl'],
+      documentUrls: json['documentUrls']!=null?(json['documentUrls'] as List).map((e) => e.toString()).toList():null,
       profilePicUrl: json['profilePicUrl'],
       metiers: json['metiers']!=null?List.from((json['metiers'] as List).map((e) => e.toString())):json['metiers'],
       nbRates: json['nbRates'],
@@ -72,38 +72,23 @@ class UserModel{
 
 
 
-  Map<String,dynamic> jsonForCreateAccount(){
-    return {
-      'email':adressEmail,
-      'fullName':nomComplet,
-      'dateNaissance':dateNaissance,
-      'rate':rate,
-      'nbRates':nbRates,
-      'metiers':metiers,
-      'type':type,
-      'profilePicUrl':profilePicUrl,
-      'documentUrl':documentUrl,
-      'address':address,
-      'description':description
-    };
-  }
 
 
   UserModel copyWith({
     String? profilePicUrl,
-    String? documentUrl,
+    List<String>? documentUrls,
     String? uid,
     int? nbRates,
     double? rate
   }){
     return UserModel(
       profilePicUrl: profilePicUrl ?? this.profilePicUrl,
-      documentUrl: documentUrl ?? this.documentUrl,
+      documentUrls: documentUrls ?? this.documentUrls,
       nomComplet: nomComplet,
       nbRates: nbRates ?? this.nbRates,
       metiers: metiers,
       imgProfile: imgProfile,
-      document: document,
+      documents: documents,
       description: description,
       dateNaissance: dateNaissance,
       adressEmail: adressEmail,
@@ -131,7 +116,7 @@ class UserModel{
       type: type?.userType,
       metiers: metiers,
       profilePicUrl:profilePicUrl,
-      documentPicUrl: documentUrl,
+      documentPicUrls: documentUrls,
       nbRates: nbRates,
     );
   }
@@ -149,12 +134,29 @@ class UserModel{
       adressEmail: userEntity.adressEmail,
       password: userEntity.password,
       nomComplet: userEntity.nomComplet,
-      document: userEntity.document,
-      documentUrl: userEntity.documentPicUrl,
+      documents: userEntity.documents,
+      documentUrls: userEntity.documentPicUrls,
       uid: userEntity.id,
       profilePicUrl: userEntity.profilePicUrl
     );
   }
+
+  Map<String,dynamic> jsonForCreateAccount(){
+    return {
+      'email':adressEmail,
+      'fullName':nomComplet,
+      'dateNaissance':dateNaissance,
+      'rate':rate,
+      'nbRates':nbRates,
+      'metiers':metiers,
+      'type':type,
+      'profilePicUrl':profilePicUrl,
+      'documentUrls':documentUrls,
+      'address':address,
+      'description':description
+    };
+  }
+
 
   Map<String,dynamic> jsonForUpdatingEmail(){
     return {
@@ -173,7 +175,7 @@ class UserModel{
   }
   Map<String,dynamic> jsonEmployeeData(){
     return {
-      'documentUrl':documentUrl,
+      'documentUrls':documentUrls,
       'address':address,
       'description':description,
       'type':type,
@@ -185,6 +187,12 @@ class UserModel{
     return {
       'rate':rate,
       'nbRates':nbRates,
+    };
+  }
+
+  Map<String,dynamic> jsonForUpdateDocumentUrls(){
+    return{
+      'documentUrls':documentUrls
     };
   }
 

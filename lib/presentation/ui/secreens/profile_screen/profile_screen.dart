@@ -17,6 +17,7 @@ import 'package:builmeet/presentation/blocs/profile_bloc/profile_bloc.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
 import 'package:builmeet/presentation/ui/components/form_field.dart';
+import 'package:builmeet/presentation/ui/components/images_list.dart';
 import 'package:builmeet/presentation/ui/secreens/profile_screen/components/change_lang_dialogue.dart';
 import 'package:builmeet/presentation/ui/secreens/profile_screen/components/info_item.dart';
 import 'package:builmeet/presentation/ui/secreens/profile_screen/components/profile_header.dart';
@@ -295,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }else if(state.fetchingDataStatus==AppStatus.success){
 
-      return descriptionWidget(state.userEntity!.description!,state.userEntity?.documentPicUrl );
+      return descriptionWidget(state.userEntity!.description!,state.userEntity?.documentPicUrls);
     }
     return const SizedBox();
   }
@@ -331,33 +332,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     return const SizedBox();
   }
-  Widget descriptionWidget(String description,String? url){
+  Widget descriptionWidget(String description,List<String>? urls){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 15,),
+        const SizedBox(height: 15,width: double.infinity,),
         Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 20.0),
           child: Text('Description',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
         ),
         const SizedBox(height: 10,),
         Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 20.0),
           child: Text('$description',style: GoogleFonts.inter(color: Colors.grey,fontWeight: FontWeight.normal),),
         ),
         const SizedBox(height: 10,),
-        if(url!=null)
-          Container(
-              clipBehavior: Clip.hardEdge,
-              constraints: BoxConstraints(
-                  maxWidth: width*0.9
-              ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(4,4))]
-              ),
-              child: Image.network(url,fit: BoxFit.cover,)
-          )
+        if(urls?.isNotEmpty ?? false)
+         ImagesList(height: height*0.35, width: width,urls: urls,)
       ],
     );
   }
@@ -562,6 +553,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var result = await GoRouter.of(context).push(Routes.editEmployeeInfos,extra: userEntity);
     if(result is UserEntity){
       profileBloc.add(RefreshData(result));
+    }else{
+      _fetchData();
     }
   }
 

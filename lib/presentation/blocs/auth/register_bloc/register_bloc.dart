@@ -37,8 +37,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         password: event.password,
         adressEmail: event.email,
         type: UserTypes.client,
-        rate: 0.0,
-        nbRates: 0,
+        rate: 5.0,
+        nbRates: 1,
       );
 
       await repository.register(userEntity);
@@ -51,6 +51,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       emit(state.copyWith(registerStatus: AppStatus.error,error: ex.toString()));
     }catch(ex){
       emit(state.copyWith(registerStatus: AppStatus.error));
+      rethrow;
     }
 
 

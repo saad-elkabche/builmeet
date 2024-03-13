@@ -174,6 +174,13 @@ class RepositoryIml extends Repository{
     await firebaseData.clientStopOffer(offerModel);
   }
 
+  @override
+  Future<UserEntity> removeDocument(String documentUrl) async{
+    UserModel userModel=await firebaseData.removeDocument(documentUrl);
+    return userModel.toUserEntity();
+  }
+
+
 
 
 

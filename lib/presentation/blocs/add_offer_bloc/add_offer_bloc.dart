@@ -37,6 +37,7 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
         && event.nbHour.isNotEmpty
         && event.dateBegin!=null
         && event.dateEnd!=null
+        && !event.dateBegin!.isAfter(event.dateEnd!)
     ){
 
       double price=double.parse(event.price);
@@ -44,13 +45,12 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
       double totalWithCommision;
 
       if(event.isByHour){
-        int nbDays=event.dateEnd!.difference(event.dateBegin!).inDays;
-
-        print('============nb=Days============${nbDays}');
-
-        int nbHoursPerDay=int.parse(event.nbHour);
-        int totalHours=nbDays*nbHoursPerDay;
-        double totalWithoutCommision=totalHours*price;
+        double totalWithoutCommision=calculTotalMission(
+            dateEnd: event.dateEnd!,
+            dateBegin:event.dateBegin!,
+          hourPrice: double.parse(event.price),
+          nbHour: int.parse(event.nbHour)
+        );
         commision=totalWithoutCommision*0.1;
         totalWithCommision=totalWithoutCommision*1.1;
       }else{
@@ -68,6 +68,7 @@ class AddOfferBloc extends Bloc<AddOfferEvent, AddOfferState> {
 
 
     }else{
+      print('clear calcul');
       emit(state.clearCalcul());
     }
   }

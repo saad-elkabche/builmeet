@@ -8,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 
-Future<bool> showDialogueQuestion(BuildContext context,String question,[String positive="Yes",String negative="No"])async{
-  bool result=await showDialog(context: context, builder: (context){
+Future<bool?> showDialogueQuestion(BuildContext context,String question,[String positive="Yes",String negative="No"])async{
+  bool? result=await showDialog(context: context, builder: (context){
     return AlertDialog(
       backgroundColor: Colors.white,
       icon: Icon(Icons.question_mark,color: AppColors.primaryColor,),
@@ -17,8 +17,8 @@ Future<bool> showDialogueQuestion(BuildContext context,String question,[String p
       content: Text(question,style: GoogleFonts.aBeeZee(fontSize: 18),textAlign: TextAlign.center,),
       actionsOverflowAlignment:OverflowBarAlignment.center ,
       actions: [
-        MyTextButton(name: "No",icon:Icons.cancel_outlined,color: Colors.redAccent,onclick: ()=>Navigator.pop(context,false)),
-        MyTextButton(name: "Yes",icon:Icons.check,color: Colors.green,onclick: ()=>Navigator.pop(context,true)),
+        MyTextButton(name: negative,icon:Icons.cancel_outlined,color: Colors.redAccent,onclick: ()=>Navigator.pop(context,false)),
+        MyTextButton(name: positive,icon:Icons.check,color: Colors.green,onclick: ()=>Navigator.pop(context,true)),
       ],
     );
   });

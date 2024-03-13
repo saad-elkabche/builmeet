@@ -5,24 +5,24 @@ class BecomeEmployeeState {
   List<String>? metiers;
   AppStatus? becomeEmployeeStatus;
   String? error;
-  File? document;
+  List<File>? documents;
   UserEntity? userEntity;
 
   BecomeEmployeeState.empty(this.userEntity);
 
-  BecomeEmployeeState({this.metiers,this.userEntity,this.document, this.becomeEmployeeStatus, this.error});
+  BecomeEmployeeState({this.metiers,this.userEntity,this.documents, this.becomeEmployeeStatus, this.error});
 
   BecomeEmployeeState copyWith({
     AppStatus? becomeEmplyeeStatus,
     String? error,
-    File? document,
+    List<File>? documents,
     UserEntity? userEntity,
     List<String>? metiers}){
 
     return BecomeEmployeeState(
       error: error,
       userEntity: userEntity ?? this.userEntity,
-      document: document ?? this.document,
+      documents: documents ?? this.documents,
       becomeEmployeeStatus: becomeEmplyeeStatus ?? this.becomeEmployeeStatus,
       metiers: metiers ?? this.metiers
     );

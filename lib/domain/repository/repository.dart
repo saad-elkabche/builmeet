@@ -48,6 +48,10 @@ abstract class Repository{
 
   Future<void> clientStopOffer(OfferEntity offer);
 
+  Future<UserEntity> removeDocument(String documentUrl);
+
+
+
 
 
 

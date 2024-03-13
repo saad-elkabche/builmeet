@@ -527,4 +527,13 @@ class DBService{
   }
 
 
+  Future<void> updateUserDocuments(UserModel user)async{
+
+    await firebaseFirestore.collection(userCollectionName)
+        .doc(user.uid)
+        .update(user.jsonForUpdateDocumentUrls());
+  }
+
+
+
 }

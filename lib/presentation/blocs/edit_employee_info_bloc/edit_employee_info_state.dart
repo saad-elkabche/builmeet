@@ -4,27 +4,31 @@ class EditEmployeeInfoState {
 
   UserEntity? userEntity;
   List<String>? metiers;
-  File? document;
+  List<File>? documents;
   AppStatus? editinfosStatus;
+  AppStatus? deleteRemoteStatus;
   String? error;
 
   EditEmployeeInfoState.empty(this.userEntity){
     metiers=userEntity!.metiers;
   }
 
-  EditEmployeeInfoState({this.userEntity,this.error,this.editinfosStatus, this.metiers, this.document});
+  EditEmployeeInfoState({this.userEntity,this.deleteRemoteStatus,this.error,this.editinfosStatus, this.metiers, this.documents});
 
-  EditEmployeeInfoState copyWith({AppStatus? editinfosStatus,
+  EditEmployeeInfoState copyWith({
+    AppStatus? editinfosStatus,
+    AppStatus? deleteRemoteStatus,
     String? error,
     UserEntity? userEntity,
-    File? document,
+    List<File>? documents,
     List<String>? metiers}){
 
     return EditEmployeeInfoState(
-      document: document ?? this.document,
+      documents: documents ?? this.documents,
       metiers: metiers ?? this.metiers,
       userEntity: userEntity ?? this.userEntity,
       error: error,
+      deleteRemoteStatus: deleteRemoteStatus,
       editinfosStatus:editinfosStatus  ?? this.editinfosStatus
     );
   }

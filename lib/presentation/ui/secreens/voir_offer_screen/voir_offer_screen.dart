@@ -14,6 +14,7 @@ import 'package:builmeet/presentation/blocs/voir_offer_bloc/voir_offer_cubit.dar
 import 'package:builmeet/presentation/ui/components/circle_image.dart';
 import 'package:builmeet/presentation/ui/components/custom_button.dart';
 import 'package:builmeet/presentation/ui/components/dialogue_infos.dart';
+import 'package:builmeet/presentation/ui/components/images_list.dart';
 import 'package:builmeet/presentation/ui/components/shimming_widget.dart';
 import 'package:builmeet/routes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -48,10 +49,12 @@ class VoirOfferScreen extends StatefulWidget {
 class _VoirOfferScreenState extends State<VoirOfferScreen> {
 
   late double width;
+  late double height;
 
   @override
   Widget build(BuildContext context) {
     width=MediaQuery.sizeOf(context).width;
+    height=MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -98,7 +101,7 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
                           mainAxisAlignment:MainAxisAlignment.spaceBetween,
                           children: [
                             Text(getLang(context, "remuneration"),style: GoogleFonts.inter(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
-                            Text('${(state.offerEntity!.price! * 1.1)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
+                            Text('${(state.offerEntity!.price! * 1.1).toStringAsFixed(2)} €',style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.bold),),
                           ],
                         ),
               
@@ -149,9 +152,10 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
   }
   Widget description(VoirOfferState state) {
 
-    String? documentUrl=state.offerEntity?.employee?.documentPicUrl;
+
 
     UserEntity employee=state.offerEntity!.employee!;
+    List<String>? urls=employee.documentPicUrls;
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -164,26 +168,8 @@ class _VoirOfferScreenState extends State<VoirOfferScreen> {
             child: Text(employee.description!,style: GoogleFonts.inter(color: Colors.black,fontWeight: FontWeight.w600),),
           ),
           const SizedBox(height: 20,),
-          if(documentUrl!=null)
-            Container(
-              clipBehavior: Clip.hardEdge,
-              constraints: BoxConstraints(
-                  maxWidth: width*0.88
-              ),
-              decoration:  BoxDecoration(
-                  boxShadow:const [BoxShadow(color: Colors.grey,blurRadius: 10,offset: Offset(3,3))] ,
-                  borderRadius: BorderRadius.circular(20)
-              ),
-              child: CachedNetworkImage(
-                imageUrl: documentUrl,
-                errorWidget:(context,str,obj)=>const Icon(Icons.image,color: Colors.red,),
-                placeholder: (ctx,str)=>ShimmingWidget(
-                    width:width*0.8,
-                    baseColor: Colors.grey[200],
-                    shimmingColor: AppColors.primaryColor,
-                    height:width*0.8),
-              ),
-            )
+          if(urls?.isNotEmpty ?? false)
+            ImagesList(height: height*0.35, width: width,urls:urls,)
         ],
       ),
     );
